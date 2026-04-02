@@ -1,0 +1,51 @@
+{
+  "units": "mm",
+  "footprint_polyline": [
+    [
+      0,
+      0
+    ],
+    [
+      56500,
+      0
+    ],
+    [
+      56500,
+      17000
+    ],
+    [
+      17000,
+      17000
+    ],
+    [
+      17000,
+      56000
+    ],
+    [
+      0,
+      56000
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "core_rect": [
+    12000,
+    12000,
+    17000,
+    17000
+  ],
+  "wing_walls": [
+    [
+      15000,
+      53500,
+      15000,
+      56000
+    ]
+  ],
+  "long_span_sensitive_zones": [
+    "east wing lower floor parking zone",
+    "re-entrant corner transfer path"
+  ]
+}

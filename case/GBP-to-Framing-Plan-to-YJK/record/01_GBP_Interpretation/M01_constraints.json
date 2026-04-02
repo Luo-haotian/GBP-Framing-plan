@@ -1,0 +1,21 @@
+{
+  "project": "Q1 Office Building with Integral Car Parking",
+  "floors": "5-storey office over LG2 carpark with roof plant",
+  "hard_constraints": {
+    "max_structural_depth_mm": 450,
+    "internal_column_line_limit_office": "one continuous internal line assumed (bent polyline)",
+    "parking_min_spaces": 50,
+    "parking_stall_mm": [
+      2500,
+      5000
+    ],
+    "aisle_min_one_way_mm": 3500,
+    "aisle_min_two_way_mm": 6000,
+    "turning_circle_min_mm": 5500
+  },
+  "imposed_loads_kPa": {
+    "office": 5.0,
+    "carpark": 3.0,
+    "service_plant_roof": 7.5
+  }
+}

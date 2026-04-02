@@ -1,0 +1,841 @@
+{
+  "meta": {
+    "project_name": "Q1 redesign 20260402",
+    "units": "m",
+    "code_basis": "HK brief + local HK Code pack",
+    "assumptions": [
+      "One continuous bent internal column spine interpreted as one internal line.",
+      "Lateral checks in this file are preliminary screening only."
+    ]
+  },
+  "envelope": {
+    "polyline": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        56.5,
+        0.0
+      ],
+      [
+        56.5,
+        17.0
+      ],
+      [
+        17.0,
+        17.0
+      ],
+      [
+        17.0,
+        56.0
+      ],
+      [
+        0.0,
+        56.0
+      ],
+      [
+        0.0,
+        0.0
+      ]
+    ]
+  },
+  "nodes": [
+    {
+      "id": "N001",
+      "x": 0.0,
+      "y": 0.0
+    },
+    {
+      "id": "N002",
+      "x": 0.0,
+      "y": 8.5
+    },
+    {
+      "id": "N003",
+      "x": 0.0,
+      "y": 17.0
+    },
+    {
+      "id": "N004",
+      "x": 0.0,
+      "y": 25.0
+    },
+    {
+      "id": "N005",
+      "x": 0.0,
+      "y": 33.0
+    },
+    {
+      "id": "N006",
+      "x": 0.0,
+      "y": 41.0
+    },
+    {
+      "id": "N007",
+      "x": 0.0,
+      "y": 49.0
+    },
+    {
+      "id": "N008",
+      "x": 0.0,
+      "y": 56.0
+    },
+    {
+      "id": "N009",
+      "x": 5.5,
+      "y": 5.5
+    },
+    {
+      "id": "N010",
+      "x": 5.5,
+      "y": 17.0
+    },
+    {
+      "id": "N011",
+      "x": 5.5,
+      "y": 25.0
+    },
+    {
+      "id": "N012",
+      "x": 5.5,
+      "y": 33.0
+    },
+    {
+      "id": "N013",
+      "x": 5.5,
+      "y": 41.0
+    },
+    {
+      "id": "N014",
+      "x": 5.5,
+      "y": 49.0
+    },
+    {
+      "id": "N015",
+      "x": 5.5,
+      "y": 56.0
+    },
+    {
+      "id": "N016",
+      "x": 8.5,
+      "y": 0.0
+    },
+    {
+      "id": "N017",
+      "x": 17.0,
+      "y": 0.0
+    },
+    {
+      "id": "N018",
+      "x": 17.0,
+      "y": 25.0
+    },
+    {
+      "id": "N019",
+      "x": 17.0,
+      "y": 33.0
+    },
+    {
+      "id": "N020",
+      "x": 17.0,
+      "y": 41.0
+    },
+    {
+      "id": "N021",
+      "x": 17.0,
+      "y": 49.0
+    },
+    {
+      "id": "N022",
+      "x": 17.0,
+      "y": 56.0
+    },
+    {
+      "id": "N023",
+      "x": 25.0,
+      "y": 0.0
+    },
+    {
+      "id": "N024",
+      "x": 25.0,
+      "y": 5.5
+    },
+    {
+      "id": "N025",
+      "x": 25.0,
+      "y": 17.0
+    },
+    {
+      "id": "N026",
+      "x": 33.0,
+      "y": 0.0
+    },
+    {
+      "id": "N027",
+      "x": 33.0,
+      "y": 5.5
+    },
+    {
+      "id": "N028",
+      "x": 33.0,
+      "y": 17.0
+    },
+    {
+      "id": "N029",
+      "x": 41.0,
+      "y": 0.0
+    },
+    {
+      "id": "N030",
+      "x": 41.0,
+      "y": 5.5
+    },
+    {
+      "id": "N031",
+      "x": 41.0,
+      "y": 17.0
+    },
+    {
+      "id": "N032",
+      "x": 49.0,
+      "y": 0.0
+    },
+    {
+      "id": "N033",
+      "x": 49.0,
+      "y": 5.5
+    },
+    {
+      "id": "N034",
+      "x": 49.0,
+      "y": 17.0
+    },
+    {
+      "id": "N035",
+      "x": 56.5,
+      "y": 0.0
+    },
+    {
+      "id": "N036",
+      "x": 56.5,
+      "y": 5.5
+    },
+    {
+      "id": "N037",
+      "x": 56.5,
+      "y": 17.0
+    },
+    {
+      "id": "W01S",
+      "x": 12.0,
+      "y": 12.0
+    },
+    {
+      "id": "W01E",
+      "x": 17.0,
+      "y": 12.0
+    },
+    {
+      "id": "W02S",
+      "x": 17.0,
+      "y": 12.0
+    },
+    {
+      "id": "W02E",
+      "x": 17.0,
+      "y": 17.0
+    },
+    {
+      "id": "W03S",
+      "x": 17.0,
+      "y": 17.0
+    },
+    {
+      "id": "W03E",
+      "x": 12.0,
+      "y": 17.0
+    },
+    {
+      "id": "W04S",
+      "x": 12.0,
+      "y": 17.0
+    },
+    {
+      "id": "W04E",
+      "x": 12.0,
+      "y": 12.0
+    },
+    {
+      "id": "W05S",
+      "x": 15.0,
+      "y": 53.5
+    },
+    {
+      "id": "W05E",
+      "x": 15.0,
+      "y": 56.0
+    }
+  ],
+  "columns": [
+    {
+      "id": "C01",
+      "node": "N017",
+      "section": "600x600"
+    },
+    {
+      "id": "C02",
+      "node": "N023",
+      "section": "600x600"
+    },
+    {
+      "id": "C03",
+      "node": "N026",
+      "section": "600x600"
+    },
+    {
+      "id": "C04",
+      "node": "N029",
+      "section": "600x600"
+    },
+    {
+      "id": "C05",
+      "node": "N032",
+      "section": "600x600"
+    },
+    {
+      "id": "C06",
+      "node": "N035",
+      "section": "600x600"
+    },
+    {
+      "id": "C08",
+      "node": "N025",
+      "section": "600x600"
+    },
+    {
+      "id": "C09",
+      "node": "N028",
+      "section": "600x600"
+    },
+    {
+      "id": "C10",
+      "node": "N031",
+      "section": "600x600"
+    },
+    {
+      "id": "C11",
+      "node": "N034",
+      "section": "600x600"
+    },
+    {
+      "id": "C12",
+      "node": "N037",
+      "section": "600x600"
+    },
+    {
+      "id": "C13",
+      "node": "N003",
+      "section": "600x600"
+    },
+    {
+      "id": "C14",
+      "node": "N004",
+      "section": "600x600"
+    },
+    {
+      "id": "C15",
+      "node": "N005",
+      "section": "600x600"
+    },
+    {
+      "id": "C16",
+      "node": "N006",
+      "section": "600x600"
+    },
+    {
+      "id": "C17",
+      "node": "N007",
+      "section": "600x600"
+    },
+    {
+      "id": "C18",
+      "node": "N008",
+      "section": "600x600"
+    },
+    {
+      "id": "C19",
+      "node": "N018",
+      "section": "600x600"
+    },
+    {
+      "id": "C20",
+      "node": "N019",
+      "section": "600x600"
+    },
+    {
+      "id": "C21",
+      "node": "N020",
+      "section": "600x600"
+    },
+    {
+      "id": "C22",
+      "node": "N021",
+      "section": "600x600"
+    },
+    {
+      "id": "C23",
+      "node": "N022",
+      "section": "600x600"
+    },
+    {
+      "id": "C24",
+      "node": "N009",
+      "section": "600x600"
+    },
+    {
+      "id": "C25",
+      "node": "N010",
+      "section": "600x600"
+    },
+    {
+      "id": "C26",
+      "node": "N011",
+      "section": "600x600"
+    },
+    {
+      "id": "C27",
+      "node": "N012",
+      "section": "600x600"
+    },
+    {
+      "id": "C28",
+      "node": "N013",
+      "section": "600x600"
+    },
+    {
+      "id": "C29",
+      "node": "N014",
+      "section": "600x600"
+    },
+    {
+      "id": "C30",
+      "node": "N015",
+      "section": "600x600"
+    },
+    {
+      "id": "C31",
+      "node": "N024",
+      "section": "600x600"
+    },
+    {
+      "id": "C32",
+      "node": "N027",
+      "section": "600x600"
+    },
+    {
+      "id": "C33",
+      "node": "N030",
+      "section": "600x600"
+    },
+    {
+      "id": "C34",
+      "node": "N033",
+      "section": "600x600"
+    },
+    {
+      "id": "C35",
+      "node": "N036",
+      "section": "600x600"
+    },
+    {
+      "id": "C36",
+      "node": "N001",
+      "section": "600x600"
+    },
+    {
+      "id": "C37",
+      "node": "N002",
+      "section": "600x600"
+    },
+    {
+      "id": "C38",
+      "node": "N016",
+      "section": "600x600"
+    }
+  ],
+  "beams": [
+    {
+      "id": "B001",
+      "start": "N001",
+      "end": "N016",
+      "type": "primary"
+    },
+    {
+      "id": "B002",
+      "start": "N016",
+      "end": "N017",
+      "type": "primary"
+    },
+    {
+      "id": "B003",
+      "start": "N017",
+      "end": "N023",
+      "type": "primary"
+    },
+    {
+      "id": "B004",
+      "start": "N023",
+      "end": "N026",
+      "type": "primary"
+    },
+    {
+      "id": "B005",
+      "start": "N026",
+      "end": "N029",
+      "type": "primary"
+    },
+    {
+      "id": "B006",
+      "start": "N029",
+      "end": "N032",
+      "type": "primary"
+    },
+    {
+      "id": "B007",
+      "start": "N032",
+      "end": "N035",
+      "type": "primary"
+    },
+    {
+      "id": "B008",
+      "start": "N003",
+      "end": "N010",
+      "type": "primary"
+    },
+    {
+      "id": "B009",
+      "start": "N010",
+      "end": "N025",
+      "type": "primary"
+    },
+    {
+      "id": "B010",
+      "start": "N025",
+      "end": "N028",
+      "type": "primary"
+    },
+    {
+      "id": "B011",
+      "start": "N028",
+      "end": "N031",
+      "type": "primary"
+    },
+    {
+      "id": "B012",
+      "start": "N031",
+      "end": "N034",
+      "type": "primary"
+    },
+    {
+      "id": "B013",
+      "start": "N034",
+      "end": "N037",
+      "type": "primary"
+    },
+    {
+      "id": "B014",
+      "start": "N004",
+      "end": "N011",
+      "type": "secondary"
+    },
+    {
+      "id": "B015",
+      "start": "N011",
+      "end": "N018",
+      "type": "secondary"
+    },
+    {
+      "id": "B016",
+      "start": "N005",
+      "end": "N012",
+      "type": "secondary"
+    },
+    {
+      "id": "B017",
+      "start": "N012",
+      "end": "N019",
+      "type": "secondary"
+    },
+    {
+      "id": "B018",
+      "start": "N006",
+      "end": "N013",
+      "type": "secondary"
+    },
+    {
+      "id": "B019",
+      "start": "N013",
+      "end": "N020",
+      "type": "secondary"
+    },
+    {
+      "id": "B020",
+      "start": "N007",
+      "end": "N014",
+      "type": "secondary"
+    },
+    {
+      "id": "B021",
+      "start": "N014",
+      "end": "N021",
+      "type": "secondary"
+    },
+    {
+      "id": "B022",
+      "start": "N008",
+      "end": "N015",
+      "type": "secondary"
+    },
+    {
+      "id": "B023",
+      "start": "N015",
+      "end": "N022",
+      "type": "secondary"
+    },
+    {
+      "id": "B024",
+      "start": "N009",
+      "end": "N024",
+      "type": "primary"
+    },
+    {
+      "id": "B025",
+      "start": "N024",
+      "end": "N027",
+      "type": "primary"
+    },
+    {
+      "id": "B026",
+      "start": "N027",
+      "end": "N030",
+      "type": "primary"
+    },
+    {
+      "id": "B027",
+      "start": "N030",
+      "end": "N033",
+      "type": "primary"
+    },
+    {
+      "id": "B028",
+      "start": "N033",
+      "end": "N036",
+      "type": "primary"
+    },
+    {
+      "id": "B029",
+      "start": "N001",
+      "end": "N002",
+      "type": "primary"
+    },
+    {
+      "id": "B030",
+      "start": "N002",
+      "end": "N003",
+      "type": "primary"
+    },
+    {
+      "id": "B031",
+      "start": "N003",
+      "end": "N004",
+      "type": "primary"
+    },
+    {
+      "id": "B032",
+      "start": "N004",
+      "end": "N005",
+      "type": "primary"
+    },
+    {
+      "id": "B033",
+      "start": "N005",
+      "end": "N006",
+      "type": "primary"
+    },
+    {
+      "id": "B034",
+      "start": "N006",
+      "end": "N007",
+      "type": "primary"
+    },
+    {
+      "id": "B035",
+      "start": "N007",
+      "end": "N008",
+      "type": "primary"
+    },
+    {
+      "id": "B036",
+      "start": "N009",
+      "end": "N010",
+      "type": "secondary"
+    },
+    {
+      "id": "B037",
+      "start": "N010",
+      "end": "N011",
+      "type": "secondary"
+    },
+    {
+      "id": "B038",
+      "start": "N011",
+      "end": "N012",
+      "type": "secondary"
+    },
+    {
+      "id": "B039",
+      "start": "N012",
+      "end": "N013",
+      "type": "secondary"
+    },
+    {
+      "id": "B040",
+      "start": "N013",
+      "end": "N014",
+      "type": "secondary"
+    },
+    {
+      "id": "B041",
+      "start": "N014",
+      "end": "N015",
+      "type": "secondary"
+    },
+    {
+      "id": "B042",
+      "start": "N017",
+      "end": "N018",
+      "type": "primary"
+    },
+    {
+      "id": "B043",
+      "start": "N018",
+      "end": "N019",
+      "type": "primary"
+    },
+    {
+      "id": "B044",
+      "start": "N019",
+      "end": "N020",
+      "type": "primary"
+    },
+    {
+      "id": "B045",
+      "start": "N020",
+      "end": "N021",
+      "type": "primary"
+    },
+    {
+      "id": "B046",
+      "start": "N021",
+      "end": "N022",
+      "type": "primary"
+    },
+    {
+      "id": "B047",
+      "start": "N023",
+      "end": "N024",
+      "type": "secondary"
+    },
+    {
+      "id": "B048",
+      "start": "N024",
+      "end": "N025",
+      "type": "secondary"
+    },
+    {
+      "id": "B049",
+      "start": "N026",
+      "end": "N027",
+      "type": "secondary"
+    },
+    {
+      "id": "B050",
+      "start": "N027",
+      "end": "N028",
+      "type": "secondary"
+    },
+    {
+      "id": "B051",
+      "start": "N029",
+      "end": "N030",
+      "type": "secondary"
+    },
+    {
+      "id": "B052",
+      "start": "N030",
+      "end": "N031",
+      "type": "secondary"
+    },
+    {
+      "id": "B053",
+      "start": "N032",
+      "end": "N033",
+      "type": "secondary"
+    },
+    {
+      "id": "B054",
+      "start": "N033",
+      "end": "N034",
+      "type": "secondary"
+    },
+    {
+      "id": "B055",
+      "start": "N035",
+      "end": "N036",
+      "type": "secondary"
+    },
+    {
+      "id": "B056",
+      "start": "N036",
+      "end": "N037",
+      "type": "secondary"
+    }
+  ],
+  "shear_walls": [
+    {
+      "id": "W01",
+      "start": "W01S",
+      "end": "W01E",
+      "role": "core"
+    },
+    {
+      "id": "W02",
+      "start": "W02S",
+      "end": "W02E",
+      "role": "core"
+    },
+    {
+      "id": "W03",
+      "start": "W03S",
+      "end": "W03E",
+      "role": "core"
+    },
+    {
+      "id": "W04",
+      "start": "W04S",
+      "end": "W04E",
+      "role": "core"
+    },
+    {
+      "id": "W05",
+      "start": "W05S",
+      "end": "W05E",
+      "role": "wing"
+    }
+  ],
+  "load_path_notes": [
+    "Gravity loads flow slab -> secondary beams -> primary beams -> columns/core.",
+    "Lateral loads resisted by core walls enhanced with re-entrant wing walls."
+  ]
+}

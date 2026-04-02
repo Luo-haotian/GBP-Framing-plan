@@ -1,0 +1,3 @@
+- Loads and parking constraints from `GBP and requirement.pdf`.
+- Wind and torsion check requirement from local Hong Kong wind code pack.
+- Internal column line treated as one continuous bent spine for this preliminary design.

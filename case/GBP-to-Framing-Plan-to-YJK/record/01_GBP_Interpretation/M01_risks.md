@@ -1,0 +1,3 @@
+- Internal column line interpretation should be confirmed with examiner/client intent.
+- Lateral checks are preliminary screening, not full FEM drift/torsion verification.
+- Foundation scheme intentionally not finalized in this script output.

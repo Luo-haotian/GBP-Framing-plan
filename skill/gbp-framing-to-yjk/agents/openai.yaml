@@ -1,0 +1,4 @@
+interface:
+  display_name: "GBP Framing to YJK"
+  short_description: "Turn GBP layouts into YJK-ready framing outputs."
+  default_prompt: "Interpret Hong Kong GBP drawings, design a framing plan, and output JSON plus DXF conversion for YJK 8.0."

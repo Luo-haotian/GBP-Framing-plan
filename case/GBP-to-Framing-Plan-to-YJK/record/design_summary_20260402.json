@@ -1,0 +1,26 @@
+{
+  "base_folder": "C:\\Users\\11131\\Desktop\\Codex\\GBP to Framing Plan to YJK structure model\\record\\20260402_v2",
+  "counts": {
+    "columns": 37,
+    "beams": 56
+  },
+  "max_beam_depth_mm": 450,
+  "max_column_utilization": 0.951,
+  "parking": {
+    "parking_usable": 51,
+    "parking_target": 50,
+    "flow_geometry_pass": true,
+    "flow_swept_proxy_pass": true,
+    "passage_issues": [],
+    "aisle_two_way_mm": 6000,
+    "turning_radius_mm": 5500
+  },
+  "lateral_screening": {
+    "building_height_m": 20.0,
+    "wind_pressure_kPa": 2.5,
+    "wind_base_shear_x_kN": 2800.0,
+    "wind_base_shear_y_kN": 2825.0,
+    "wall_avg_shear_x_MPa": 0.0005,
+    "wall_avg_shear_y_MPa": 0.0005
+  }
+}
