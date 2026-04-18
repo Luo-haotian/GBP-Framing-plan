@@ -1,0 +1,498 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/gbp-framing-v2/neutral-structural-schema-v1.json",
+  "title": "GBP Framing V2 Neutral Structural Model V1",
+  "description": "Code-neutral structural contract for intent data, analysis seed data, and precheck state.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata",
+    "source_of_truth",
+    "coordinate_system",
+    "intent_model",
+    "analysis_seed_model",
+    "precheck"
+  ],
+  "properties": {
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "source_of_truth": {
+      "type": "string",
+      "const": "json"
+    },
+    "coordinate_system": { "$ref": "#/$defs/coordinate_system" },
+    "intent_model": { "$ref": "#/$defs/intent_model" },
+    "analysis_seed_model": { "$ref": "#/$defs/analysis_seed_model" },
+    "precheck": { "$ref": "#/$defs/precheck" }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "point_2d": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "point_3d": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" }
+      }
+    },
+    "polyline_2d": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/point_2d" }
+    },
+    "traceability": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_artifact_id": { "$ref": "#/$defs/id" },
+        "sheet_name": { "$ref": "#/$defs/text" },
+        "source_entity_ref": { "$ref": "#/$defs/text" },
+        "assumption_basis": { "$ref": "#/$defs/text" }
+      }
+    },
+    "reference_axes": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "x_grid": { "$ref": "#/$defs/text" },
+        "y_grid": { "$ref": "#/$defs/text" },
+        "offset_x": { "type": "number" },
+        "offset_y": { "type": "number" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "source", "confidence", "units"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "v1"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["AI", "human", "hybrid"]
+        },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "units": {
+          "type": "string",
+          "enum": ["metric"]
+        },
+        "project_id": { "$ref": "#/$defs/text" },
+        "project_name": { "$ref": "#/$defs/text" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" },
+        "input_artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "type", "path"],
+            "properties": {
+              "id": { "$ref": "#/$defs/id" },
+              "type": {
+                "type": "string",
+                "enum": ["vector_pdf", "dxf"]
+              },
+              "path": { "$ref": "#/$defs/text" },
+              "sheet_name": { "$ref": "#/$defs/text" },
+              "revision": { "$ref": "#/$defs/text" }
+            }
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/text" }
+        }
+      }
+    },
+    "coordinate_system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "origin",
+        "rotation_degrees",
+        "length_unit",
+        "elevation_unit"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["global_project"]
+        },
+        "origin": { "$ref": "#/$defs/point_3d" },
+        "rotation_degrees": { "type": "number" },
+        "length_unit": {
+          "type": "string",
+          "enum": ["mm", "m"]
+        },
+        "elevation_unit": {
+          "type": "string",
+          "enum": ["mm", "m"]
+        },
+        "grid_reference_basis": { "$ref": "#/$defs/text" }
+      }
+    },
+    "grid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "orientation", "curve"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "label": { "$ref": "#/$defs/text" },
+        "orientation": {
+          "type": "string",
+          "enum": ["x", "y", "radial", "other"]
+        },
+        "curve": { "$ref": "#/$defs/polyline_2d" },
+        "spacing_to_next": { "type": "number" },
+        "traceability": { "$ref": "#/$defs/traceability" }
+      }
+    },
+    "level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "elevation"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/text" },
+        "elevation": { "type": "number" },
+        "role": {
+          "type": "string",
+          "enum": ["foundation", "basement", "ground", "typical", "roof", "other"]
+        },
+        "traceability": { "$ref": "#/$defs/traceability" }
+      }
+    },
+    "column": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "base_level_id", "top_level_id", "location"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "base_level_id": { "$ref": "#/$defs/id" },
+        "top_level_id": { "$ref": "#/$defs/id" },
+        "location": { "$ref": "#/$defs/point_2d" },
+        "reference_axes": { "$ref": "#/$defs/reference_axes" },
+        "section_seed_id": { "$ref": "#/$defs/id" },
+        "rotation_degrees": { "type": "number" },
+        "structural_role": {
+          "type": "string",
+          "enum": ["gravity", "lateral", "combined", "unknown"]
+        },
+        "traceability": { "$ref": "#/$defs/traceability" }
+      }
+    },
+    "beam": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "level_id", "start", "end"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "level_id": { "$ref": "#/$defs/id" },
+        "start": { "$ref": "#/$defs/point_2d" },
+        "end": { "$ref": "#/$defs/point_2d" },
+        "reference_axes": { "$ref": "#/$defs/reference_axes" },
+        "section_seed_id": { "$ref": "#/$defs/id" },
+        "beam_role": {
+          "type": "string",
+          "enum": ["primary", "secondary", "transfer", "unknown"]
+        },
+        "traceability": { "$ref": "#/$defs/traceability" }
+      }
+    },
+    "wall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "base_level_id", "top_level_id", "centerline"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "base_level_id": { "$ref": "#/$defs/id" },
+        "top_level_id": { "$ref": "#/$defs/id" },
+        "centerline": { "$ref": "#/$defs/polyline_2d" },
+        "thickness": { "type": "number" },
+        "wall_role": {
+          "type": "string",
+          "enum": ["core", "shear", "gravity", "partition_like", "unknown"]
+        },
+        "traceability": { "$ref": "#/$defs/traceability" }
+      }
+    },
+    "slab": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "level_id", "boundary"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "level_id": { "$ref": "#/$defs/id" },
+        "boundary": { "$ref": "#/$defs/polyline_2d" },
+        "thickness_seed": { "type": "number" },
+        "section_seed_id": { "$ref": "#/$defs/id" },
+        "traceability": { "$ref": "#/$defs/traceability" }
+      }
+    },
+    "opening": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "level_id", "boundary"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "level_id": { "$ref": "#/$defs/id" },
+        "boundary": { "$ref": "#/$defs/polyline_2d" },
+        "opening_type": {
+          "type": "string",
+          "enum": ["shaft", "stair", "ramp", "service", "other"]
+        },
+        "traceability": { "$ref": "#/$defs/traceability" }
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "level_id", "polyline"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "level_id": { "$ref": "#/$defs/id" },
+        "polyline": { "$ref": "#/$defs/polyline_2d" },
+        "traceability": { "$ref": "#/$defs/traceability" }
+      }
+    },
+    "keepout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "level_id", "boundary", "reason"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "level_id": { "$ref": "#/$defs/id" },
+        "boundary": { "$ref": "#/$defs/polyline_2d" },
+        "reason": { "$ref": "#/$defs/text" },
+        "traceability": { "$ref": "#/$defs/traceability" }
+      }
+    },
+    "core_zone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "level_id", "boundary"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "level_id": { "$ref": "#/$defs/id" },
+        "boundary": { "$ref": "#/$defs/polyline_2d" },
+        "traceability": { "$ref": "#/$defs/traceability" }
+      }
+    },
+    "uncertainty_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "entity_id", "field", "confidence", "reason"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "entity_id": { "$ref": "#/$defs/id" },
+        "field": { "$ref": "#/$defs/text" },
+        "confidence": { "$ref": "#/$defs/confidence" },
+        "reason": { "$ref": "#/$defs/text" },
+        "evidence_path": {
+          "type": "string",
+          "enum": ["vector_text", "vector_geometry", "manual_assumption", "mixed"]
+        },
+        "fallback_assumption": { "$ref": "#/$defs/text" }
+      }
+    },
+    "intent_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "grids",
+        "levels",
+        "columns",
+        "beams",
+        "walls",
+        "slabs",
+        "openings",
+        "uncertainty"
+      ],
+      "properties": {
+        "grids": { "type": "array", "items": { "$ref": "#/$defs/grid" } },
+        "levels": { "type": "array", "items": { "$ref": "#/$defs/level" } },
+        "columns": { "type": "array", "items": { "$ref": "#/$defs/column" } },
+        "beams": { "type": "array", "items": { "$ref": "#/$defs/beam" } },
+        "walls": { "type": "array", "items": { "$ref": "#/$defs/wall" } },
+        "slabs": { "type": "array", "items": { "$ref": "#/$defs/slab" } },
+        "openings": { "type": "array", "items": { "$ref": "#/$defs/opening" } },
+        "uncertainty": { "type": "array", "items": { "$ref": "#/$defs/uncertainty_item" } },
+        "boundaries": { "type": "array", "items": { "$ref": "#/$defs/boundary" } },
+        "keepouts": { "type": "array", "items": { "$ref": "#/$defs/keepout" } },
+        "core_zones": { "type": "array", "items": { "$ref": "#/$defs/core_zone" } }
+      }
+    },
+    "material": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "material_type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/text" },
+        "material_type": {
+          "type": "string",
+          "enum": ["concrete", "steel", "composite", "other"]
+        },
+        "grade": { "$ref": "#/$defs/text" },
+        "properties": { "type": "object" }
+      }
+    },
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "section_type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/text" },
+        "section_type": {
+          "type": "string",
+          "enum": ["column", "beam", "wall", "slab", "other"]
+        },
+        "material_id": { "$ref": "#/$defs/id" },
+        "geometry": { "type": "object" }
+      }
+    },
+    "load": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "load_type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/text" },
+        "load_type": {
+          "type": "string",
+          "enum": ["dead", "live", "wind", "seismic", "superimposed", "other"]
+        },
+        "target_ids": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "magnitude": { "type": "number" },
+        "direction": { "$ref": "#/$defs/text" },
+        "distribution": { "$ref": "#/$defs/text" }
+      }
+    },
+    "load_combination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "factors"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/text" },
+        "design_stage": {
+          "type": "string",
+          "enum": ["uls", "sls", "other"]
+        },
+        "factors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["load_id", "factor"],
+            "properties": {
+              "load_id": { "$ref": "#/$defs/id" },
+              "factor": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "boundary_condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "target_id", "condition_type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "target_id": { "$ref": "#/$defs/id" },
+        "condition_type": {
+          "type": "string",
+          "enum": ["fixed", "pinned", "roller", "spring", "diaphragm", "other"]
+        },
+        "parameters": { "type": "object" }
+      }
+    },
+    "analysis_option": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "value"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/text" },
+        "value": {}
+      }
+    },
+    "analysis_seed_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "materials",
+        "sections",
+        "loads",
+        "load_combinations",
+        "boundary_conditions",
+        "analysis_options"
+      ],
+      "properties": {
+        "materials": { "type": "array", "items": { "$ref": "#/$defs/material" } },
+        "sections": { "type": "array", "items": { "$ref": "#/$defs/section" } },
+        "loads": { "type": "array", "items": { "$ref": "#/$defs/load" } },
+        "load_combinations": { "type": "array", "items": { "$ref": "#/$defs/load_combination" } },
+        "boundary_conditions": { "type": "array", "items": { "$ref": "#/$defs/boundary_condition" } },
+        "analysis_options": { "type": "array", "items": { "$ref": "#/$defs/analysis_option" } }
+      }
+    },
+    "precheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "issues"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "passed", "warning", "failed"]
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "severity", "message"],
+            "properties": {
+              "type": { "$ref": "#/$defs/text" },
+              "severity": {
+                "type": "string",
+                "enum": ["info", "warning", "error"]
+              },
+              "entity_id": { "$ref": "#/$defs/id" },
+              "message": { "$ref": "#/$defs/text" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

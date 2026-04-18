@@ -1,0 +1,150 @@
+{
+  "metadata": {
+    "version": "v1",
+    "source": "AI",
+    "confidence": 0.84,
+    "units": "metric",
+    "project_id": "GBPV2-EX-001",
+    "project_name": "Simple HK Office Floor Example",
+    "created_at": "2026-04-18",
+    "updated_at": "2026-04-18",
+    "input_artifacts": [
+      {
+        "id": "SRC-001",
+        "type": "vector_pdf",
+        "path": "synthetic://schema-demo",
+        "sheet_name": "schema-demo"
+      }
+    ],
+    "notes": [
+      "Synthetic example for neutral structural schema V1.",
+      "Not a Figure Q recognition result.",
+      "Prepared for schema validation and review DXF generation."
+    ]
+  },
+  "source_of_truth": "json",
+  "coordinate_system": {
+    "type": "global_project",
+    "origin": { "x": 0, "y": 0, "z": 0 },
+    "rotation_degrees": 0,
+    "length_unit": "mm",
+    "elevation_unit": "mm",
+    "grid_reference_basis": "Grid A / Grid 1 intersection at LG1 is the global origin."
+  },
+  "intent_model": {
+    "grids": [
+      { "id": "GR-X-A", "label": "A", "orientation": "x", "curve": [{ "x": 0, "y": 0 }, { "x": 0, "y": 16000 }], "spacing_to_next": 8000 },
+      { "id": "GR-X-B", "label": "B", "orientation": "x", "curve": [{ "x": 8000, "y": 0 }, { "x": 8000, "y": 16000 }], "spacing_to_next": 8000 },
+      { "id": "GR-X-C", "label": "C", "orientation": "x", "curve": [{ "x": 16000, "y": 0 }, { "x": 16000, "y": 16000 }] },
+      { "id": "GR-Y-1", "label": "1", "orientation": "y", "curve": [{ "x": 0, "y": 0 }, { "x": 16000, "y": 0 }], "spacing_to_next": 8000 },
+      { "id": "GR-Y-2", "label": "2", "orientation": "y", "curve": [{ "x": 0, "y": 8000 }, { "x": 16000, "y": 8000 }], "spacing_to_next": 8000 },
+      { "id": "GR-Y-3", "label": "3", "orientation": "y", "curve": [{ "x": 0, "y": 16000 }, { "x": 16000, "y": 16000 }] }
+    ],
+    "levels": [
+      { "id": "LV-LG1-000", "name": "LG1", "elevation": 0, "role": "ground" },
+      { "id": "LV-L02-4000", "name": "L02", "elevation": 4000, "role": "typical" },
+      { "id": "LV-RF-8000", "name": "RF", "elevation": 8000, "role": "roof" }
+    ],
+    "columns": [
+      { "id": "CO-A1-001", "base_level_id": "LV-LG1-000", "top_level_id": "LV-RF-8000", "location": { "x": 0, "y": 0 }, "reference_axes": { "x_grid": "A", "y_grid": "1", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-COL-600X600", "rotation_degrees": 0, "structural_role": "combined" },
+      { "id": "CO-A2-001", "base_level_id": "LV-LG1-000", "top_level_id": "LV-RF-8000", "location": { "x": 0, "y": 8000 }, "reference_axes": { "x_grid": "A", "y_grid": "2", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-COL-600X600", "rotation_degrees": 0, "structural_role": "combined" },
+      { "id": "CO-A3-001", "base_level_id": "LV-LG1-000", "top_level_id": "LV-RF-8000", "location": { "x": 0, "y": 16000 }, "reference_axes": { "x_grid": "A", "y_grid": "3", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-COL-600X600", "rotation_degrees": 0, "structural_role": "combined" },
+      { "id": "CO-B1-001", "base_level_id": "LV-LG1-000", "top_level_id": "LV-RF-8000", "location": { "x": 8000, "y": 0 }, "reference_axes": { "x_grid": "B", "y_grid": "1", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-COL-600X600", "rotation_degrees": 0, "structural_role": "combined" },
+      { "id": "CO-B3-001", "base_level_id": "LV-LG1-000", "top_level_id": "LV-RF-8000", "location": { "x": 8000, "y": 16000 }, "reference_axes": { "x_grid": "B", "y_grid": "3", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-COL-600X600", "rotation_degrees": 0, "structural_role": "combined" },
+      { "id": "CO-C1-001", "base_level_id": "LV-LG1-000", "top_level_id": "LV-RF-8000", "location": { "x": 16000, "y": 0 }, "reference_axes": { "x_grid": "C", "y_grid": "1", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-COL-600X600", "rotation_degrees": 0, "structural_role": "combined" },
+      { "id": "CO-C2-001", "base_level_id": "LV-LG1-000", "top_level_id": "LV-RF-8000", "location": { "x": 16000, "y": 8000 }, "reference_axes": { "x_grid": "C", "y_grid": "2", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-COL-600X600", "rotation_degrees": 0, "structural_role": "combined" },
+      { "id": "CO-C3-001", "base_level_id": "LV-LG1-000", "top_level_id": "LV-RF-8000", "location": { "x": 16000, "y": 16000 }, "reference_axes": { "x_grid": "C", "y_grid": "3", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-COL-600X600", "rotation_degrees": 0, "structural_role": "combined" }
+    ],
+    "beams": [
+      { "id": "BM-A1-B1-001", "level_id": "LV-L02-4000", "start": { "x": 0, "y": 0 }, "end": { "x": 8000, "y": 0 }, "reference_axes": { "x_grid": "A-B", "y_grid": "1", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-BM-300X600", "beam_role": "primary" },
+      { "id": "BM-B1-C1-001", "level_id": "LV-L02-4000", "start": { "x": 8000, "y": 0 }, "end": { "x": 16000, "y": 0 }, "reference_axes": { "x_grid": "B-C", "y_grid": "1", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-BM-300X600", "beam_role": "primary" },
+      { "id": "BM-A3-B3-001", "level_id": "LV-L02-4000", "start": { "x": 0, "y": 16000 }, "end": { "x": 8000, "y": 16000 }, "reference_axes": { "x_grid": "A-B", "y_grid": "3", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-BM-300X600", "beam_role": "primary" },
+      { "id": "BM-B3-C3-001", "level_id": "LV-L02-4000", "start": { "x": 8000, "y": 16000 }, "end": { "x": 16000, "y": 16000 }, "reference_axes": { "x_grid": "B-C", "y_grid": "3", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-BM-300X600", "beam_role": "primary" },
+      { "id": "BM-A1-A2-001", "level_id": "LV-L02-4000", "start": { "x": 0, "y": 0 }, "end": { "x": 0, "y": 8000 }, "reference_axes": { "x_grid": "A", "y_grid": "1-2", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-BM-300X600", "beam_role": "primary" },
+      { "id": "BM-A2-A3-001", "level_id": "LV-L02-4000", "start": { "x": 0, "y": 8000 }, "end": { "x": 0, "y": 16000 }, "reference_axes": { "x_grid": "A", "y_grid": "2-3", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-BM-300X600", "beam_role": "primary" },
+      { "id": "BM-C1-C2-001", "level_id": "LV-L02-4000", "start": { "x": 16000, "y": 0 }, "end": { "x": 16000, "y": 8000 }, "reference_axes": { "x_grid": "C", "y_grid": "1-2", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-BM-300X600", "beam_role": "primary" },
+      { "id": "BM-C2-C3-001", "level_id": "LV-L02-4000", "start": { "x": 16000, "y": 8000 }, "end": { "x": 16000, "y": 16000 }, "reference_axes": { "x_grid": "C", "y_grid": "2-3", "offset_x": 0, "offset_y": 0 }, "section_seed_id": "SC-BM-300X600", "beam_role": "primary" },
+      { "id": "BM-CORE-S-001", "level_id": "LV-L02-4000", "start": { "x": 6000, "y": 6000 }, "end": { "x": 10000, "y": 6000 }, "reference_axes": { "x_grid": "B", "y_grid": "2", "offset_x": 0, "offset_y": -2000 }, "section_seed_id": "SC-BM-250X500", "beam_role": "secondary" },
+      { "id": "BM-CORE-E-001", "level_id": "LV-L02-4000", "start": { "x": 10000, "y": 6000 }, "end": { "x": 10000, "y": 10000 }, "reference_axes": { "x_grid": "B", "y_grid": "2", "offset_x": 2000, "offset_y": 0 }, "section_seed_id": "SC-BM-250X500", "beam_role": "secondary" },
+      { "id": "BM-CORE-N-001", "level_id": "LV-L02-4000", "start": { "x": 10000, "y": 10000 }, "end": { "x": 6000, "y": 10000 }, "reference_axes": { "x_grid": "B", "y_grid": "2", "offset_x": 0, "offset_y": 2000 }, "section_seed_id": "SC-BM-250X500", "beam_role": "secondary" },
+      { "id": "BM-CORE-W-001", "level_id": "LV-L02-4000", "start": { "x": 6000, "y": 10000 }, "end": { "x": 6000, "y": 6000 }, "reference_axes": { "x_grid": "B", "y_grid": "2", "offset_x": -2000, "offset_y": 0 }, "section_seed_id": "SC-BM-250X500", "beam_role": "secondary" }
+    ],
+    "walls": [
+      { "id": "WA-CORE-S-001", "base_level_id": "LV-LG1-000", "top_level_id": "LV-RF-8000", "centerline": [{ "x": 6000, "y": 6000 }, { "x": 10000, "y": 6000 }], "thickness": 250, "wall_role": "core" },
+      { "id": "WA-CORE-E-001", "base_level_id": "LV-LG1-000", "top_level_id": "LV-RF-8000", "centerline": [{ "x": 10000, "y": 6000 }, { "x": 10000, "y": 10000 }], "thickness": 250, "wall_role": "core" },
+      { "id": "WA-CORE-N-001", "base_level_id": "LV-LG1-000", "top_level_id": "LV-RF-8000", "centerline": [{ "x": 10000, "y": 10000 }, { "x": 6000, "y": 10000 }], "thickness": 250, "wall_role": "core" },
+      { "id": "WA-CORE-W-001", "base_level_id": "LV-LG1-000", "top_level_id": "LV-RF-8000", "centerline": [{ "x": 6000, "y": 10000 }, { "x": 6000, "y": 6000 }], "thickness": 250, "wall_role": "core" }
+    ],
+    "slabs": [
+      { "id": "SL-L02-001", "level_id": "LV-L02-4000", "boundary": [{ "x": 0, "y": 0 }, { "x": 16000, "y": 0 }, { "x": 16000, "y": 16000 }, { "x": 0, "y": 16000 }, { "x": 0, "y": 0 }], "thickness_seed": 150, "section_seed_id": "SC-SL-150" }
+    ],
+    "openings": [
+      { "id": "OP-CORE-001", "level_id": "LV-L02-4000", "boundary": [{ "x": 6000, "y": 6000 }, { "x": 10000, "y": 6000 }, { "x": 10000, "y": 10000 }, { "x": 6000, "y": 10000 }, { "x": 6000, "y": 6000 }], "opening_type": "shaft" }
+    ],
+    "uncertainty": [
+      { "id": "UC-001", "entity_id": "BM-CORE-S-001", "field": "beam_role", "confidence": 0.62, "reason": "Primary versus secondary classification is inferred from span hierarchy rather than explicit source tags.", "evidence_path": "manual_assumption", "fallback_assumption": "Keep as secondary review beam unless office criteria require collector behavior." },
+      { "id": "UC-002", "entity_id": "SL-L02-001", "field": "thickness_seed", "confidence": 0.55, "reason": "150 mm slab thickness is a seed assumption for analysis readiness, not a final design output.", "evidence_path": "manual_assumption", "fallback_assumption": "Review against span-depth and vibration criteria before solver export." },
+      { "id": "UC-003", "entity_id": "WA-CORE-E-001", "field": "wall_role", "confidence": 0.78, "reason": "Core wall role is inferred from enclosed service core geometry.", "evidence_path": "mixed", "fallback_assumption": "Treat as core wall pending architectural core confirmation." },
+      { "id": "UC-004", "entity_id": "CO-B3-001", "field": "section_seed_id", "confidence": 0.71, "reason": "600 x 600 seed section is assigned from regular grid behavior rather than explicit sizing on a source package.", "evidence_path": "manual_assumption", "fallback_assumption": "Review column seed section after gravity and lateral load take-down." }
+    ],
+    "boundaries": [
+      { "id": "BND-L02-001", "level_id": "LV-L02-4000", "polyline": [{ "x": 0, "y": 0 }, { "x": 16000, "y": 0 }, { "x": 16000, "y": 16000 }, { "x": 0, "y": 16000 }, { "x": 0, "y": 0 }] }
+    ],
+    "keepouts": [
+      { "id": "KO-CORE-001", "level_id": "LV-L02-4000", "boundary": [{ "x": 6000, "y": 6000 }, { "x": 10000, "y": 6000 }, { "x": 10000, "y": 10000 }, { "x": 6000, "y": 10000 }, { "x": 6000, "y": 6000 }], "reason": "No-column and service circulation keepout around central core." }
+    ],
+    "core_zones": [
+      { "id": "CZ-CORE-001", "level_id": "LV-L02-4000", "boundary": [{ "x": 6000, "y": 6000 }, { "x": 10000, "y": 6000 }, { "x": 10000, "y": 10000 }, { "x": 6000, "y": 10000 }, { "x": 6000, "y": 6000 }] }
+    ]
+  },
+  "analysis_seed_model": {
+    "materials": [
+      { "id": "MT-CONC-C35", "name": "Concrete C35", "material_type": "concrete", "grade": "C35", "properties": { "fc_mpa": 35, "density_kn_m3": 25 } }
+    ],
+    "sections": [
+      { "id": "SC-COL-600X600", "name": "RC Column 600x600", "section_type": "column", "material_id": "MT-CONC-C35", "geometry": { "shape": "rectangular", "b_mm": 600, "h_mm": 600 } },
+      { "id": "SC-BM-300X600", "name": "RC Beam 300x600", "section_type": "beam", "material_id": "MT-CONC-C35", "geometry": { "shape": "rectangular", "b_mm": 300, "h_mm": 600 } },
+      { "id": "SC-BM-250X500", "name": "RC Beam 250x500", "section_type": "beam", "material_id": "MT-CONC-C35", "geometry": { "shape": "rectangular", "b_mm": 250, "h_mm": 500 } },
+      { "id": "SC-WA-250", "name": "RC Wall 250", "section_type": "wall", "material_id": "MT-CONC-C35", "geometry": { "thickness_mm": 250 } },
+      { "id": "SC-SL-150", "name": "RC Slab 150", "section_type": "slab", "material_id": "MT-CONC-C35", "geometry": { "thickness_mm": 150 } }
+    ],
+    "loads": [
+      { "id": "LD-DL-001", "name": "Dead Load Typical Floor", "load_type": "dead", "target_ids": ["SL-L02-001"], "magnitude": 6, "direction": "gravity_z", "distribution": "uniform_area_kPa" },
+      { "id": "LD-LL-001", "name": "Live Load Typical Office", "load_type": "live", "target_ids": ["SL-L02-001"], "magnitude": 3, "direction": "gravity_z", "distribution": "uniform_area_kPa" },
+      { "id": "LD-WX-001", "name": "Equivalent Wind X", "load_type": "wind", "target_ids": ["LV-L02-4000", "LV-RF-8000"], "magnitude": 15, "direction": "+X", "distribution": "story_force_kN" },
+      { "id": "LD-WY-001", "name": "Equivalent Wind Y", "load_type": "wind", "target_ids": ["LV-L02-4000", "LV-RF-8000"], "magnitude": 15, "direction": "+Y", "distribution": "story_force_kN" }
+    ],
+    "load_combinations": [
+      { "id": "LC-ULS-001", "name": "1.4DL + 1.6LL", "design_stage": "uls", "factors": [{ "load_id": "LD-DL-001", "factor": 1.4 }, { "load_id": "LD-LL-001", "factor": 1.6 }] },
+      { "id": "LC-SLS-001", "name": "1.0DL + 1.0LL", "design_stage": "sls", "factors": [{ "load_id": "LD-DL-001", "factor": 1.0 }, { "load_id": "LD-LL-001", "factor": 1.0 }] },
+      { "id": "LC-WIND-001", "name": "1.0DL + 0.5LL + 1.0WX", "design_stage": "uls", "factors": [{ "load_id": "LD-DL-001", "factor": 1.0 }, { "load_id": "LD-LL-001", "factor": 0.5 }, { "load_id": "LD-WX-001", "factor": 1.0 }] }
+    ],
+    "boundary_conditions": [
+      { "id": "BC-CO-A1-BASE", "target_id": "CO-A1-001", "condition_type": "fixed", "parameters": { "level_id": "LV-LG1-000" } },
+      { "id": "BC-CO-A2-BASE", "target_id": "CO-A2-001", "condition_type": "fixed", "parameters": { "level_id": "LV-LG1-000" } },
+      { "id": "BC-CO-A3-BASE", "target_id": "CO-A3-001", "condition_type": "fixed", "parameters": { "level_id": "LV-LG1-000" } },
+      { "id": "BC-CO-B1-BASE", "target_id": "CO-B1-001", "condition_type": "fixed", "parameters": { "level_id": "LV-LG1-000" } },
+      { "id": "BC-CO-B3-BASE", "target_id": "CO-B3-001", "condition_type": "fixed", "parameters": { "level_id": "LV-LG1-000" } },
+      { "id": "BC-CO-C1-BASE", "target_id": "CO-C1-001", "condition_type": "fixed", "parameters": { "level_id": "LV-LG1-000" } },
+      { "id": "BC-CO-C2-BASE", "target_id": "CO-C2-001", "condition_type": "fixed", "parameters": { "level_id": "LV-LG1-000" } },
+      { "id": "BC-CO-C3-BASE", "target_id": "CO-C3-001", "condition_type": "fixed", "parameters": { "level_id": "LV-LG1-000" } },
+      { "id": "BC-WA-S-BASE", "target_id": "WA-CORE-S-001", "condition_type": "fixed", "parameters": { "level_id": "LV-LG1-000" } },
+      { "id": "BC-WA-E-BASE", "target_id": "WA-CORE-E-001", "condition_type": "fixed", "parameters": { "level_id": "LV-LG1-000" } },
+      { "id": "BC-WA-N-BASE", "target_id": "WA-CORE-N-001", "condition_type": "fixed", "parameters": { "level_id": "LV-LG1-000" } },
+      { "id": "BC-WA-W-BASE", "target_id": "WA-CORE-W-001", "condition_type": "fixed", "parameters": { "level_id": "LV-LG1-000" } }
+    ],
+    "analysis_options": [
+      { "id": "AO-TARGET-SOLVER", "name": "target_solver", "value": "ETABS" },
+      { "id": "AO-MODEL-GRADE", "name": "model_grade", "value": "analysis-seed-grade" },
+      { "id": "AO-SLAB-MESH", "name": "slab_auto_mesh", "value": { "enabled": true, "target_size_mm": 2000 } }
+    ]
+  },
+  "precheck": {
+    "status": "warning",
+    "issues": [
+      { "type": "span_depth_screen", "severity": "warning", "entity_id": "BM-A1-B1-001", "message": "8.0 m perimeter beam uses a 300 x 600 seed section and should be reviewed against office span-depth screening before export." },
+      { "type": "seed_assumption_review", "severity": "warning", "entity_id": "SL-L02-001", "message": "Slab thickness is a seed assumption only and requires solver-stage confirmation." },
+      { "type": "core_role_inferred", "severity": "info", "entity_id": "WA-CORE-E-001", "message": "Core wall classification is inferred from plan geometry and should be checked during Revit review." }
+    ]
+  }
+}
