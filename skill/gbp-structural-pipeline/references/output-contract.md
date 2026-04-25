@@ -14,6 +14,8 @@ Use this reference when formatting user-facing outputs or machine-readable miles
 6. Revit intermediary status
 7. analysis-seed status
 8. open conflicts and next blocking step
+9. standard floor groups used
+10. self-check result for supports, openings, long spans, and visible dimensions
 
 ## Machine-Readable Deliverables
 
@@ -37,3 +39,5 @@ Depending on route, prefer:
 ## Response Rule
 
 Always say what is missing before implying the pipeline is complete.
+
+When a Revit or DXF review artifact is produced, state whether it uses compact standard floors or fully expanded storeys.

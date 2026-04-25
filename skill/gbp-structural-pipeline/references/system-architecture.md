@@ -7,7 +7,7 @@ Use this reference when the task is to explain, design, or implement the end-to-
 ## Core Pipeline
 
 ```text
-GBP / PDF / DXF / image
+GBP / vector PDF / DXF
 -> geometry extraction
 -> neutral structural JSON
 -> Revit review model
@@ -40,9 +40,12 @@ GBP / PDF / DXF / image
 
 Input:
 - vector PDF
-- scanned PDF
 - DXF
-- image sheets
+
+Out of scope for V1:
+- scanned PDF
+- OCR-only workflows
+- raster image sheets
 
 Output:
 - grids
@@ -71,6 +74,10 @@ Use Revit to:
 - review levels, grids, and member placement
 - coordinate with BIM workflows
 - serve as a controlled exchange stop
+
+Automation boundary:
+- RevitAPI.dll is available to compiled Revit add-ins and in-process commands.
+- Standalone Python should create exchange artifacts or add-in inputs, not call the Revit API directly.
 
 Rules:
 - `JSON -> Revit` is the primary direction.

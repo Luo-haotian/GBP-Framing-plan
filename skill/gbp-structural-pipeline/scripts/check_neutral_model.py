@@ -6,6 +6,10 @@ import json
 from pathlib import Path
 
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+DEFAULT_SCHEMA = SCRIPT_DIR.parent / "references" / "neutral-structural-schema.json"
+
+
 def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -135,32 +139,83 @@ def validate_model(model: dict) -> list[str]:
     return issues
 
 
-def build_report(model_path: Path, issues: list[str]) -> str:
+def validate_schema(model: dict, schema_path: Path, require_schema: bool) -> tuple[list[str], list[str]]:
+    issues: list[str] = []
+    notes: list[str] = []
+
+    if not schema_path.exists():
+        message = f"schema file not found: {schema_path}"
+        if require_schema:
+            issues.append(message)
+        else:
+            notes.append(message)
+        return issues, notes
+
+    try:
+        import jsonschema
+    except ImportError:
+        message = "jsonschema package is not installed; schema validation skipped"
+        if require_schema:
+            issues.append(message)
+        else:
+            notes.append(message)
+        return issues, notes
+
+    schema = load_json(schema_path)
+    validator = jsonschema.Draft202012Validator(schema)
+    errors = sorted(validator.iter_errors(model), key=lambda error: list(error.path))
+    for error in errors:
+        path = "/".join(str(part) for part in error.path) or "<root>"
+        issues.append(f"schema error at {path}: {error.message}")
+
+    notes.append(f"schema checked: {schema_path}")
+    return issues, notes
+
+
+def build_report(model_path: Path, issues: list[str], notes: list[str]) -> str:
     status = "pass" if not issues else "warning"
     lines = ["# Neutral Model Validation Report", ""]
     lines.append(f"- source: `{model_path}`")
     lines.append(f"- status: **{status}**")
     lines.append(f"- issue count: {len(issues)}")
     lines.append("")
+    lines.append("## Notes")
+    if notes:
+        for note in notes:
+            lines.append(f"- {note}")
+    else:
+        lines.append("- none")
+    lines.append("")
     lines.append("## Issues")
     if issues:
-      for issue in issues:
-          lines.append(f"- {issue}")
+        for issue in issues:
+            lines.append(f"- {issue}")
     else:
-      lines.append("- none detected in deterministic consistency checks")
+        lines.append("- none detected")
     return "\n".join(lines) + "\n"
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate GBP Framing V2 neutral structural model references and shape.")
+    parser = argparse.ArgumentParser(description="Validate GBP Structural Pipeline neutral structural model references and shape.")
     parser.add_argument("input_json", help="Path to neutral structural model JSON.")
     parser.add_argument("--report", help="Optional markdown report output path.")
+    parser.add_argument("--schema", default=str(DEFAULT_SCHEMA), help="JSON Schema path. Defaults to the bundled V1 schema.")
+    parser.add_argument("--no-schema", action="store_true", help="Skip JSON Schema validation and run deterministic checks only.")
+    parser.add_argument("--require-schema", action="store_true", help="Fail with a warning if schema validation cannot run.")
     args = parser.parse_args()
 
     model_path = Path(args.input_json).resolve()
     model = load_json(model_path)
     issues = validate_model(model)
-    report = build_report(model_path, issues)
+    notes: list[str] = []
+    if args.no_schema:
+        notes.append("schema validation skipped by --no-schema")
+    else:
+        schema_issues, schema_notes = validate_schema(model, Path(args.schema).resolve(), args.require_schema)
+        issues.extend(schema_issues)
+        notes.extend(schema_notes)
+
+    report = build_report(model_path, issues, notes)
 
     if args.report:
         Path(args.report).write_text(report, encoding="utf-8")

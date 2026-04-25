@@ -1,6 +1,6 @@
 # Example Schema Demo
 
-This folder stores a synthetic example instance for `GBP Framing V2`.
+This folder stores a synthetic example instance for `GBP Framing`.
 
 Contents:
 

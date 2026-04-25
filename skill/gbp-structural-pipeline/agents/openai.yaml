@@ -1,0 +1,4 @@
+interface:
+  display_name: "GBP Structural Pipeline"
+  short_description: "GBP to neutral JSON, Revit review, and solver seeds."
+  default_prompt: "Develop or run the Hong Kong GBP structural pipeline: extract vector PDF/DXF geometry, validate neutral structural JSON, prepare Revit 2023 review artifacts, and seed ETABS, YJK, or SAFE workflows."

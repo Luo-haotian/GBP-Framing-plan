@@ -16,6 +16,16 @@ Revit is used for:
 Revit is not used as the authoritative structural calculation engine.
 Revit is not the source of truth.
 
+## Automation Boundary
+
+Revit 2023 API work must run inside a Revit-controlled process:
+- compiled Revit add-in
+- macro
+- Dynamo / pyRevit-style in-process bridge
+- RevitCoreConsole when available and suitable
+
+Standalone Python scripts in this skill may generate neutral JSON, review DXF, logs, or add-in input payloads. They should not claim to directly create Revit elements through `RevitAPI.dll` unless an in-process Revit command or add-in is present.
+
 ## Input Expectations
 
 The Revit adapter should consume the neutral structural model, not raw GBP directly.
@@ -35,6 +45,11 @@ Required mapped entities:
 - Preserve neutral IDs in Revit parameters whenever possible.
 - Keep grid names exactly consistent with the neutral model.
 - Keep level names stable and ordered.
+- Never flatten multi-level models into a single framing plan unless the user explicitly requests a legacy 2D overlay. Separate the Revit/DXF review output by standard floor type or explicit `level_id`.
+- For tall commercial GBP projects, identify at least these standard floor groups when present: basement typical, ground floor, low shopping floors, podium roof / transfer floor, typical office floor, sky garden/refuge floor, roof/height limit.
+- Use compact standard-floor JSON for review import. Do not import fully expanded repeated office floors into Revit unless the importer has a batching/expansion mode.
+- If the importer detects an excessive review element count, stop and ask for compact standard-floor input instead of letting Revit hang.
+- Show member seed dimensions in Revit element names, marks/comments, or view notes.
 - Separate model elements from review-only annotations.
 - Record which entities were auto-created versus manually revised in Revit.
 

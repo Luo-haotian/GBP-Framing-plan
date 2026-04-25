@@ -121,6 +121,8 @@ Recommended statuses:
 - Geometry-bearing intent entities should be mappable to Revit review objects.
 - Analysis seed entities should be sufficient for ETABS-first export.
 - YJK and SAFE may consume subsets or transformed views of the same root schema.
+- Opening edge beams are explicit structural support elements and may use `beam_role: "opening_edge"`.
+- Repeated office/storey layouts should be represented as standard floor groups or templates in analysis options and review outputs; expand every repeated floor only when the target adapter requires it.
 
 ## Validation Artifact
 

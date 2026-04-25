@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Name>GBP Structural Pipeline Importer</Name>
+    <Assembly>C:\Users\11131\Documents\New project\skill\gbp-structural-pipeline\assets\revit-json-importer\GbpStructuralPipelineImporter.dll</Assembly>
+    <AddInId>4C2ECA66-65CC-40B4-8A77-037D6D32B2DA</AddInId>
+    <FullClassName>GbpStructuralPipeline.Revit2023.ImportNeutralJsonCommand</FullClassName>
+    <VendorId>GBPS</VendorId>
+    <VendorDescription>GBP Structural Pipeline neutral JSON importer for Revit 2023</VendorDescription>
+  </AddIn>
+</RevitAddIns>

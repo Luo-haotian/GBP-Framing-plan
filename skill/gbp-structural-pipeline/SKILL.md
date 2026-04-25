@@ -1,9 +1,9 @@
 ---
-name: gbp-framing-v2
-description: Interpret Hong Kong GBP architectural drawings into a neutral structural model, Revit review model, and downstream analysis seeds for ETABS first, YJK second, and SAFE later. Use when Codex needs to extract grid-based geometry from vector PDF or DXF drawings, define structural framing intent, prepare code-neutral JSON schemas or exchange payloads, treat Revit as a checking and BIM intermediary, run preliminary prechecks before formal analysis, or design the GBP-to-JSON-to-Revit-to-analysis workflow.
+name: gbp-structural-pipeline
+description: Develop and operate a Hong Kong GBP-to-structural-data pipeline that turns vector PDF or DXF architectural drawings into a neutral structural JSON model, Revit 2023 review/intermediary artifacts, and downstream ETABS/YJK/SAFE analysis seeds. Use when Codex needs to design or test the GBP-to-JSON-to-Revit-to-analysis workflow, validate neutral structural models, generate review DXF outputs, probe local Revit 2023 API readiness, prepare code-neutral exchange payloads, or run preliminary prechecks before formal analysis. For YJK-only framing deliverables, prefer the gbp-framing-to-yjk skill.
 ---
 
-# GBP Framing V2
+# GBP Structural Pipeline
 
 Use this skill as a system-level workflow, not as a one-shot drawing conversion.
 
@@ -25,14 +25,19 @@ Identify the task first. Then load only the references needed for that route.
 3. **Neutral structural model authoring**
    - Use when the user wants JSON schema design, intent-model fields, analysis-seed fields, or exchange contracts.
    - Always read `references/neutral-structural-model.md`.
+   - Read `references/structural-layout-rules.md` before generating or changing a structural layout.
    - Read `references/neutral-structural-schema.md` when the task needs concrete schema structure.
    - Read `references/output-contract.md` when user-facing payload structure matters.
    - Run `scripts/check_neutral_model.py` when a concrete instance needs deterministic reference validation.
 4. **Revit intermediary route**
    - Use when the user wants Revit as the checking model, BIM hub, or exchange stop between AI and analysis software.
    - Always read `references/revit-adapter.md`.
+   - Read `references/structural-layout-rules.md` before creating review DXF or Revit import artifacts.
+   - Read `references/revit-2023-api.md` when the task needs local Revit 2023 API availability, add-in packaging, or automation feasibility.
    - Read `references/neutral-structural-model.md` for entity ownership and mapping.
    - Run `scripts/neutral_model_to_review_dxf.py` when a review-only DXF should be generated from neutral JSON.
+   - Run `scripts/probe_revit_2023_api.py` when checking whether the local machine has Revit 2023 API assemblies and add-in locations available.
+   - Use `assets/revit-json-importer/` as the Revit 2023 JSON importer prototype source when developing or rebuilding the add-in.
 5. **Analysis seed / adapter route**
    - Use when the user wants ETABS, YJK, or SAFE handoff design.
    - Always read `references/analysis-adapters.md`.
@@ -72,6 +77,9 @@ Load `references/output-contract.md` whenever the answer should be checker-ready
 - Express important geometry relative to the grid whenever possible.
 - If dimensions, grid spacing, and raw geometry disagree, report the conflict and tag the chosen temporary basis.
 - V1 supports vector PDF and DXF only. Do not route scanned drawings through OCR in this version.
+- Revit API automation must run inside Revit, RevitCoreConsole, Dynamo, macro, or an installed add-in command. Do not describe RevitAPI.dll as a normal standalone Python API.
+- Use standard floor groups for repeated tower/storey layouts. Do not expand every repeated office floor for review imports unless the user explicitly requests full-storey expansion.
+- Structural layout must support architectural intent: preserve no-column/no-wall zones, support every opening edge, avoid duplicate beams where walls directly support slabs, and flag long spans that need formal checks.
 
 ## Route-Specific Execution Order
 
@@ -123,6 +131,9 @@ Always make the answer explicit about:
 - whether Revit is acting as importer, checker, coordinator, or exporter
 - whether formal analysis has been completed
 - next blocking gap in the pipeline
+- standard floor groups used
+- whether dimensions are visible in JSON and review artifacts
+- self-check result before Revit/export delivery
 
 ## Architecture Map
 
@@ -132,8 +143,10 @@ Use these references as the runtime map:
 - `references/neutral-structural-model.md`
 - `references/neutral-structural-schema.md`
 - `references/revit-adapter.md`
+- `references/revit-2023-api.md`
 - `references/analysis-adapters.md`
 - `references/precheck-engine.md`
+- `references/structural-layout-rules.md`
 - `references/parity-and-review.md`
 - `references/hk-code-basis.md`
 - `references/output-contract.md`

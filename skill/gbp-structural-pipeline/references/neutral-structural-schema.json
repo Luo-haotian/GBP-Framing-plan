@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.local/gbp-framing-v2/neutral-structural-schema-v1.json",
-  "title": "GBP Framing V2 Neutral Structural Model V1",
+  "$id": "urn:gbp-structural-pipeline:neutral-structural-schema:v1",
+  "title": "GBP Structural Pipeline Neutral Structural Model V1",
   "description": "Code-neutral structural contract for intent data, analysis seed data, and precheck state.",
   "type": "object",
   "additionalProperties": false,
@@ -219,7 +219,7 @@
         "section_seed_id": { "$ref": "#/$defs/id" },
         "beam_role": {
           "type": "string",
-          "enum": ["primary", "secondary", "transfer", "unknown"]
+          "enum": ["primary", "secondary", "transfer", "opening_edge", "unknown"]
         },
         "traceability": { "$ref": "#/$defs/traceability" }
       }
