@@ -14,6 +14,10 @@ namespace GbpStructuralPipeline.Revit2023
     public class ImportNeutralJsonCommand : IExternalCommand
     {
         private const string ParamName = "GBP_JSON_ID";
+        private const string ParamRole = "GBP_STRUCTURAL_ROLE";
+        private const string ParamSection = "GBP_SECTION";
+        private const string ParamStatus = "GBP_MODEL_STATUS";
+        private const string ParamSource = "GBP_SOURCE";
         private const string AppId = "GBP_STRUCTURAL_PIPELINE";
         private const double MmToFeet = 1.0 / 304.8;
 
@@ -178,7 +182,7 @@ namespace GbpStructuralPipeline.Revit2023
                 IList<XYZ> footprint = Rectangle(x, y, b, h, Math.Min(z0, z1));
                 string label = id + " " + SectionLabel(section);
                 DirectShape ds = CreateExtrudedShape(doc, BuiltInCategory.OST_StructuralColumns, label, footprint, Math.Abs(z1 - z0));
-                Stamp(ds, id, "column " + SectionLabel(section));
+                Stamp(ds, id, "column", SectionLabel(section));
             }
         }
 
@@ -204,7 +208,7 @@ namespace GbpStructuralPipeline.Revit2023
                 IList<XYZ> footprint = ThickLineFootprint(p0, p1, thickness);
                 string label = id + " t" + Num(wall, "thickness", 250).ToString("0") + "mm";
                 DirectShape ds = CreateExtrudedShape(doc, BuiltInCategory.OST_Walls, label, footprint, Math.Abs(z1 - z0));
-                Stamp(ds, id, "wall " + label);
+                Stamp(ds, id, "wall", label);
             }
         }
 
@@ -226,7 +230,7 @@ namespace GbpStructuralPipeline.Revit2023
                 IList<XYZ> footprint = ThickLineFootprint(p0, p1, width);
                 string label = id + " " + SectionLabel(section);
                 DirectShape ds = CreateExtrudedShape(doc, BuiltInCategory.OST_StructuralFraming, label, footprint, depth);
-                Stamp(ds, id, "beam " + SectionLabel(section));
+                Stamp(ds, id, "beam", SectionLabel(section));
             }
         }
 
@@ -243,7 +247,7 @@ namespace GbpStructuralPipeline.Revit2023
                 IList<XYZ> footprint = PolygonFootprint(Arr(slab["boundary"]), z);
                 string label = id + " t" + Num(slab, "thickness_seed", 200).ToString("0") + "mm";
                 DirectShape ds = CreateExtrudedShape(doc, BuiltInCategory.OST_Floors, label, footprint, thickness);
-                Stamp(ds, id, "slab " + label);
+                Stamp(ds, id, "slab", label);
             }
         }
 
@@ -573,16 +577,6 @@ namespace GbpStructuralPipeline.Revit2023
 
         private static void EnsureJsonIdParameter(Autodesk.Revit.ApplicationServices.Application app, Document doc)
         {
-            DefinitionBindingMapIterator iterator = doc.ParameterBindings.ForwardIterator();
-            while (iterator.MoveNext())
-            {
-                Definition definition = iterator.Key;
-                if (definition != null && definition.Name == ParamName)
-                {
-                    return;
-                }
-            }
-
             string original = app.SharedParametersFilename;
             string tempPath = Path.Combine(Path.GetTempPath(), "gbp_structural_pipeline_shared_parameters.txt");
             if (!File.Exists(tempPath))
@@ -592,12 +586,6 @@ namespace GbpStructuralPipeline.Revit2023
             app.SharedParametersFilename = tempPath;
             DefinitionFile file = app.OpenSharedParameterFile();
             DefinitionGroup group = file.Groups.get_Item("GBP Structural Pipeline") ?? file.Groups.Create("GBP Structural Pipeline");
-            Definition definitionToBind = group.Definitions.get_Item(ParamName);
-            if (definitionToBind == null)
-            {
-                ExternalDefinitionCreationOptions options = new ExternalDefinitionCreationOptions(ParamName, SpecTypeId.String.Text);
-                definitionToBind = group.Definitions.Create(options);
-            }
 
             CategorySet categories = app.Create.NewCategorySet();
             AddCategory(doc, categories, BuiltInCategory.OST_Levels);
@@ -608,9 +596,28 @@ namespace GbpStructuralPipeline.Revit2023
             AddCategory(doc, categories, BuiltInCategory.OST_Floors);
             AddCategory(doc, categories, BuiltInCategory.OST_GenericModel);
 
-            InstanceBinding binding = app.Create.NewInstanceBinding(categories);
-            doc.ParameterBindings.Insert(definitionToBind, binding, BuiltInParameterGroup.PG_DATA);
+            EnsureTextParameter(app, doc, group, categories, ParamName);
+            EnsureTextParameter(app, doc, group, categories, ParamRole);
+            EnsureTextParameter(app, doc, group, categories, ParamSection);
+            EnsureTextParameter(app, doc, group, categories, ParamStatus);
+            EnsureTextParameter(app, doc, group, categories, ParamSource);
             app.SharedParametersFilename = original;
+        }
+
+        private static void EnsureTextParameter(Autodesk.Revit.ApplicationServices.Application app, Document doc, DefinitionGroup group, CategorySet categories, string name)
+        {
+            Definition definitionToBind = group.Definitions.get_Item(name);
+            if (definitionToBind == null)
+            {
+                ExternalDefinitionCreationOptions options = new ExternalDefinitionCreationOptions(name, SpecTypeId.String.Text);
+                definitionToBind = group.Definitions.Create(options);
+            }
+
+            InstanceBinding binding = app.Create.NewInstanceBinding(categories);
+            if (!doc.ParameterBindings.Insert(definitionToBind, binding, BuiltInParameterGroup.PG_DATA))
+            {
+                doc.ParameterBindings.ReInsert(definitionToBind, binding, BuiltInParameterGroup.PG_DATA);
+            }
         }
 
         private static void AddCategory(Document doc, CategorySet categories, BuiltInCategory builtInCategory)
@@ -667,13 +674,13 @@ namespace GbpStructuralPipeline.Revit2023
             return null;
         }
 
-        private static void Stamp(Element element, string jsonId, string role)
+        private static void Stamp(Element element, string jsonId, string role, string section = "")
         {
-            Parameter parameter = element.LookupParameter(ParamName);
-            if (parameter != null && !parameter.IsReadOnly)
-            {
-                parameter.Set(jsonId);
-            }
+            SetTextParameter(element, ParamName, jsonId);
+            SetTextParameter(element, ParamRole, role);
+            SetTextParameter(element, ParamSection, section);
+            SetTextParameter(element, ParamStatus, "review-grade; not analysis-verified");
+            SetTextParameter(element, ParamSource, "neutral JSON / GBP Structural Pipeline");
             Parameter mark = element.get_Parameter(BuiltInParameter.ALL_MODEL_MARK);
             if (mark != null && !mark.IsReadOnly)
             {
@@ -682,7 +689,16 @@ namespace GbpStructuralPipeline.Revit2023
             Parameter comments = element.get_Parameter(BuiltInParameter.ALL_MODEL_INSTANCE_COMMENTS);
             if (comments != null && !comments.IsReadOnly)
             {
-                comments.Set("GBP Structural Pipeline " + role + " from neutral JSON: " + jsonId);
+                comments.Set("GBP Structural Pipeline " + role + " " + section + " from neutral JSON: " + jsonId);
+            }
+        }
+
+        private static void SetTextParameter(Element element, string name, string value)
+        {
+            Parameter parameter = element.LookupParameter(name);
+            if (parameter != null && !parameter.IsReadOnly)
+            {
+                parameter.Set(value ?? "");
             }
         }
 

@@ -16,7 +16,15 @@ This folder is the versioned repository mirror of the current `run-001` review i
 - `etabs_import_plan_v0_16.json`
 - `etabs_api_research_v0_16.md`
 - `revit_package_v0_16.md`
+- `transfer_column_check_v0_16.md`
+- `etabs-api-starter/`
 - `PRD_RPD_v0_16.md`
+
+## Current Warnings
+
+- Ten tower columns currently start at podium roof without direct lower column/wall continuity. Treat these as transfer-required unless the next version adds continuous lower supports.
+- Revit review geometry is DirectShape-based but now includes GBP shared parameters for JSON ID, structural role, section, model status, and source.
+- ETABS is the analysis target; the starter project demonstrates API startup and blank model creation.
 
 ## Version Policy
 

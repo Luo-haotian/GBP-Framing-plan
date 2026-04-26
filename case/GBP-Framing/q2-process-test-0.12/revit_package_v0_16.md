@@ -46,3 +46,21 @@ C:\Users\11131\Desktop\Codex\GBP-Framing Plan v2\run-001\outputs\neutral_structu
 ## Boundary
 
 This creates DirectShape review geometry. It is not final production Revit family mapping and is not structural calculation output.
+
+## Revit Element Information
+
+The importer now writes these shared instance parameters where Revit allows them:
+
+- `GBP_JSON_ID`
+- `GBP_STRUCTURAL_ROLE`
+- `GBP_SECTION`
+- `GBP_MODEL_STATUS`
+- `GBP_SOURCE`
+
+It also writes `Mark` and `Comments`.
+
+If the properties do not appear after import, close Revit completely and reopen it so the v0.16 DLL is loaded. Only one addin should be active:
+
+```text
+GbpStructuralPipelineImporter_v0_16.addin
+```

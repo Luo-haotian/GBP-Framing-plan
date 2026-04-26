@@ -24,8 +24,12 @@ YJK is no longer the immediate solver priority. ETABS 21.1 is the first formal a
 - v0.16 Revit importer guard updated from 800 to 1200 review elements.
 - Revit importer rebuilt and copied into `run-001\revit-json-importer-v0_16`.
 - Revit addin installed to the Revit 2023 addins folder.
+- Revit addin cleanup completed: only the v0.16 addin should remain active.
+- Revit DirectShape review elements now carry GBP shared parameters for ID, role, section, source, and model status.
 - ETABS 21.1 local API files and COM entry points verified.
 - ETABS dry-run import plan generated: `etabs_import_plan_v0_16.json`.
+- ETABS API starter fixed to copy required runtime DLLs beside the EXE.
+- Transfer-column check added: 10 tower columns require transfer design or lower support alignment.
 - Structural self-check report generated.
 
 ## Current Deliverables
@@ -37,11 +41,14 @@ YJK is no longer the immediate solver priority. ETABS 21.1 is the first formal a
 - `etabs_import_plan_v0_16.json`
 - `etabs_api_research_v0_16.md`
 - `revit_package_v0_16.md`
+- `transfer_column_check_v0_16.md`
+- `etabs-api-starter/`
 
 ## Still Not Complete
 
 - No ETABS `.EDB` has been created yet.
 - No ETABS analysis has been run yet.
+- Ten tower columns are transfer-required unless lower supports are added.
 - PT/composite beam assumptions are not final ETABS design properties yet.
 - HK code numeric values still need page-cited extraction before final code checks.
 - Revit output remains DirectShape review geometry, not production family mapping.
