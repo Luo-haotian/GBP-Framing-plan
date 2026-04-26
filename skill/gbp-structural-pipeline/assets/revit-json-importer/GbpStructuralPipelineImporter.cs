@@ -70,9 +70,9 @@ namespace GbpStructuralPipeline.Revit2023
             Dictionary<string, object> intent = Obj(model["intent_model"]);
             Dictionary<string, object> seed = Obj(model["analysis_seed_model"]);
             int importElementCount = EstimateImportElementCount(intent);
-            if (importElementCount > 800)
+            if (importElementCount > 1200)
             {
-                throw new InvalidOperationException("This JSON contains " + importElementCount + " importable review elements. Use a standard-floor compact model for Revit review, or split the import by floor group. This guard prevents Revit from hanging on fully expanded repeated floors.");
+                throw new InvalidOperationException("This JSON contains " + importElementCount + " importable review elements. Use a standard-floor compact model for Revit review, or split the import by floor group. This guard prevents Revit from hanging on fully expanded repeated floors. Current v0.16 review models are expected to stay below 1200 elements.");
             }
             Dictionary<string, object> sectionLookup = BuildLookup(Arr(seed["sections"]));
             Dictionary<string, object> levelLookup = BuildLookup(Arr(intent["levels"]));

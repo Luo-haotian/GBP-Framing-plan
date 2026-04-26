@@ -44,6 +44,21 @@ def add_text(msp, text: str, x: float, y: float, height: float = 180, layer: str
     msp.add_text(text, dxfattribs={"layer": layer, "height": height, "rotation": rotation}).set_placement((x, y))
 
 
+def label_rotation_and_offset(p1: tuple[float, float], p2: tuple[float, float], offset: float = 150.0) -> tuple[float, float, float]:
+    x1, y1 = p1
+    x2, y2 = p2
+    dx = x2 - x1
+    dy = y2 - y1
+    length = math.hypot(dx, dy)
+    if length == 0:
+        return 0.0, offset, offset
+
+    if abs(dy) > abs(dx):
+        return 90.0, offset, -offset
+
+    return 0.0, offset, offset
+
+
 def shift_point(point: dict, dx: float, dy: float) -> tuple[float, float]:
     return (float(point["x"]) + dx, float(point["y"]) + dy)
 
@@ -255,7 +270,8 @@ def build_dxf(model: dict, output_path: Path, separate_levels: bool = True) -> N
                 cx = (p1[0] + p2[0]) / 2.0
                 cy = (p1[1] + p2[1]) / 2.0
                 label = f"{beam['id']} B{section_label(sections, beam.get('section_seed_id'))}"
-                add_text(msp, label, cx + 150, cy + 150, 160, "TEXT")
+                rotation, label_dx, label_dy = label_rotation_and_offset(p1, p2)
+                add_text(msp, label, cx + label_dx, cy + label_dy, 160, "TEXT", rotation)
 
         for column in intent.get("columns", []):
             if separate_levels and not level_in_vertical_range(group, column, level_lookup):

@@ -32,12 +32,12 @@ Copy `GbpStructuralPipelineImporter.addin` to:
 C:\Users\11131\AppData\Roaming\Autodesk\Revit\Addins\2023
 ```
 
-Then open Revit 2023, open a project, run the external command, and select the 0.11 compact standard-floor file:
+Then open Revit 2023, open a project, run the external command, and select the current compact standard-floor review file:
 
 ```text
-C:\Users\11131\Documents\New project\case\GBP-Framing\q2-process-test-0.11\neutral_structural_model_v0_11.json
+C:\Users\11131\Desktop\Codex\GBP-Framing Plan v2\run-001\outputs\neutral_structural_model_v0_16_review_revit_etabs.json
 ```
 
-The importer now stops when the selected JSON has too many repeated review elements, to avoid freezing Revit on fully expanded office-floor geometry.
+The importer now stops when the selected JSON has more than 1200 importable review elements, to avoid freezing Revit on fully expanded office-floor geometry. Current v0.16 standard-floor review models should stay below that guard.
 
 Keep this as a manual test step until we decide the add-in is safe enough to install automatically.
