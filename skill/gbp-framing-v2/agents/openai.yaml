@@ -1,4 +1,4 @@
 interface:
   display_name: "GBP Framing V2"
-  short_description: "GBP to JSON, Revit, and analysis seeds."
-  default_prompt: "Interpret Hong Kong GBP drawings, build a neutral structural JSON, prepare a Revit review model, and seed ETABS, YJK, or SAFE workflows."
+  short_description: "Modular GBP to JSON, Revit, and ETABS handoff."
+  default_prompt: "Interpret Hong Kong GBP drawings with grid-first extraction, build independent neutral JSON elements, prepare review DXF/Revit outputs, and seed ETABS 21.1 workflows."

@@ -82,6 +82,36 @@
         "offset_y": { "type": "number" }
       }
     },
+    "model_status": {
+      "type": "string",
+      "enum": ["confirmed", "assumed", "needs_review", "transfer_required"]
+    },
+    "downstream_impact": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["DXF", "Revit", "ETABS", "future_YJK"]
+      },
+      "uniqueItems": true
+    },
+    "support_relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "supported_by": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "supports": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "load_path": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" }
+        }
+      }
+    },
     "metadata": {
       "type": "object",
       "additionalProperties": false,
@@ -184,6 +214,10 @@
           "type": "string",
           "enum": ["foundation", "basement", "ground", "typical", "roof", "other"]
         },
+        "storey_group": { "$ref": "#/$defs/text" },
+        "repeat_count": { "type": "integer", "minimum": 1 },
+        "status": { "$ref": "#/$defs/model_status" },
+        "downstream_impact": { "$ref": "#/$defs/downstream_impact" },
         "traceability": { "$ref": "#/$defs/traceability" }
       }
     },
@@ -203,6 +237,10 @@
           "type": "string",
           "enum": ["gravity", "lateral", "combined", "unknown"]
         },
+        "mark": { "$ref": "#/$defs/text" },
+        "status": { "$ref": "#/$defs/model_status" },
+        "support_relation": { "$ref": "#/$defs/support_relation" },
+        "downstream_impact": { "$ref": "#/$defs/downstream_impact" },
         "traceability": { "$ref": "#/$defs/traceability" }
       }
     },
@@ -221,6 +259,14 @@
           "type": "string",
           "enum": ["primary", "secondary", "transfer", "unknown"]
         },
+        "structural_role": {
+          "type": "string",
+          "enum": ["gravity", "lateral", "combined", "collector", "transfer", "unknown"]
+        },
+        "mark": { "$ref": "#/$defs/text" },
+        "status": { "$ref": "#/$defs/model_status" },
+        "support_relation": { "$ref": "#/$defs/support_relation" },
+        "downstream_impact": { "$ref": "#/$defs/downstream_impact" },
         "traceability": { "$ref": "#/$defs/traceability" }
       }
     },
@@ -238,6 +284,11 @@
           "type": "string",
           "enum": ["core", "shear", "gravity", "partition_like", "unknown"]
         },
+        "section_seed_id": { "$ref": "#/$defs/id" },
+        "mark": { "$ref": "#/$defs/text" },
+        "status": { "$ref": "#/$defs/model_status" },
+        "support_relation": { "$ref": "#/$defs/support_relation" },
+        "downstream_impact": { "$ref": "#/$defs/downstream_impact" },
         "traceability": { "$ref": "#/$defs/traceability" }
       }
     },
@@ -251,6 +302,14 @@
         "boundary": { "$ref": "#/$defs/polyline_2d" },
         "thickness_seed": { "type": "number" },
         "section_seed_id": { "$ref": "#/$defs/id" },
+        "structural_role": {
+          "type": "string",
+          "enum": ["floor", "diaphragm", "transfer", "roof", "unknown"]
+        },
+        "mark": { "$ref": "#/$defs/text" },
+        "status": { "$ref": "#/$defs/model_status" },
+        "support_relation": { "$ref": "#/$defs/support_relation" },
+        "downstream_impact": { "$ref": "#/$defs/downstream_impact" },
         "traceability": { "$ref": "#/$defs/traceability" }
       }
     },
@@ -266,6 +325,9 @@
           "type": "string",
           "enum": ["shaft", "stair", "ramp", "service", "other"]
         },
+        "mark": { "$ref": "#/$defs/text" },
+        "status": { "$ref": "#/$defs/model_status" },
+        "downstream_impact": { "$ref": "#/$defs/downstream_impact" },
         "traceability": { "$ref": "#/$defs/traceability" }
       }
     },
@@ -277,6 +339,13 @@
         "id": { "$ref": "#/$defs/id" },
         "level_id": { "$ref": "#/$defs/id" },
         "polyline": { "$ref": "#/$defs/polyline_2d" },
+        "boundary_type": {
+          "type": "string",
+          "enum": ["site", "building", "podium", "tower", "floorplate", "other"]
+        },
+        "mark": { "$ref": "#/$defs/text" },
+        "status": { "$ref": "#/$defs/model_status" },
+        "downstream_impact": { "$ref": "#/$defs/downstream_impact" },
         "traceability": { "$ref": "#/$defs/traceability" }
       }
     },
@@ -289,6 +358,9 @@
         "level_id": { "$ref": "#/$defs/id" },
         "boundary": { "$ref": "#/$defs/polyline_2d" },
         "reason": { "$ref": "#/$defs/text" },
+        "mark": { "$ref": "#/$defs/text" },
+        "status": { "$ref": "#/$defs/model_status" },
+        "downstream_impact": { "$ref": "#/$defs/downstream_impact" },
         "traceability": { "$ref": "#/$defs/traceability" }
       }
     },
@@ -300,6 +372,36 @@
         "id": { "$ref": "#/$defs/id" },
         "level_id": { "$ref": "#/$defs/id" },
         "boundary": { "$ref": "#/$defs/polyline_2d" },
+        "core_role": {
+          "type": "string",
+          "enum": ["lateral", "gravity", "service", "mixed", "unknown"]
+        },
+        "mark": { "$ref": "#/$defs/text" },
+        "status": { "$ref": "#/$defs/model_status" },
+        "support_relation": { "$ref": "#/$defs/support_relation" },
+        "downstream_impact": { "$ref": "#/$defs/downstream_impact" },
+        "traceability": { "$ref": "#/$defs/traceability" }
+      }
+    },
+    "functional_zone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "level_id", "boundary", "zone_type"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "level_id": { "$ref": "#/$defs/id" },
+        "boundary": { "$ref": "#/$defs/polyline_2d" },
+        "zone_type": {
+          "type": "string",
+          "enum": ["mall", "office", "parking", "core", "atrium", "refuge", "passage", "plant_room", "lobby", "service", "roof", "other"]
+        },
+        "constraints": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/text" }
+        },
+        "mark": { "$ref": "#/$defs/text" },
+        "status": { "$ref": "#/$defs/model_status" },
+        "downstream_impact": { "$ref": "#/$defs/downstream_impact" },
         "traceability": { "$ref": "#/$defs/traceability" }
       }
     },
@@ -344,7 +446,8 @@
         "uncertainty": { "type": "array", "items": { "$ref": "#/$defs/uncertainty_item" } },
         "boundaries": { "type": "array", "items": { "$ref": "#/$defs/boundary" } },
         "keepouts": { "type": "array", "items": { "$ref": "#/$defs/keepout" } },
-        "core_zones": { "type": "array", "items": { "$ref": "#/$defs/core_zone" } }
+        "core_zones": { "type": "array", "items": { "$ref": "#/$defs/core_zone" } },
+        "functional_zones": { "type": "array", "items": { "$ref": "#/$defs/functional_zone" } }
       }
     },
     "material": {

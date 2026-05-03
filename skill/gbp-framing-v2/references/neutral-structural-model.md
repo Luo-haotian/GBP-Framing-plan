@@ -66,6 +66,8 @@ Do not collapse these layers unless the project is very small and the user expli
 {
   "grids": [],
   "levels": [],
+  "boundaries": [],
+  "functional_zones": [],
   "columns": [],
   "beams": [],
   "walls": [],
@@ -106,7 +108,41 @@ Do not collapse these layers unless the project is very small and the user expli
   - source drawing
   - source sheet
   - source entity or note
-  - assumption basis
+      - assumption basis
+
+## Independent Element Contract
+
+Every relevant element should carry these fields directly or through a linked relation block:
+
+- `id`
+- `mark`
+- `source`
+- `traceability`
+- `level` / `storey`
+- `geometry`
+- `structural_role`
+- `section_seed`
+- `status`
+- `supported_by`
+- `supports`
+- `load_path`
+- `downstream_impact`
+
+Allowed `status` values:
+
+- `confirmed`: drawing/brief/code/approved decision supports the element
+- `assumed`: review-grade assumption
+- `needs_review`: human review required
+- `transfer_required`: vertical discontinuity or transfer behavior must be analyzed
+
+Allowed `downstream_impact` values:
+
+- `DXF`
+- `Revit`
+- `ETABS`
+- `future_YJK`
+
+Support relations should be object IDs, not free-text descriptions, whenever possible.
 
 ## Units Rules
 

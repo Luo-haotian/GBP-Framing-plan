@@ -32,6 +32,9 @@ Minimum requirements:
 - materials and sections
 - supports
 - loads and combinations
+- transfer-required flags
+- story expansion or repeated-floor mass strategy
+- unsupported-feature warnings
 
 ## YJK Adapter
 
@@ -40,7 +43,7 @@ Use for:
 - framing import and structural arrangement review
 
 Priority:
-- second-priority route after ETABS
+- future route after ETABS-first contract is stable
 
 Minimum requirements:
 - grids or coordinate backbone
@@ -56,7 +59,7 @@ Use for:
 - mat, slab, and local floor-system follow-up
 
 Priority:
-- later branch after ETABS and YJK
+- later branch after ETABS and floor/foundation scope is scheduled
 
 Minimum requirements:
 - slab geometry
@@ -71,6 +74,10 @@ Minimum requirements:
 - `auto-analysis-ready`: enough for scripted solve
 
 Do not claim `auto-analysis-ready` unless all required metadata is present.
+
+## Adapter Ownership Rule
+
+Adapters consume neutral JSON. They must not become the source of truth. Target-software object IDs belong in adapter metadata or result payloads, not as primary JSON identities.
 
 ## Result Feedback Contract
 

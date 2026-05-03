@@ -76,6 +76,34 @@ Recommended optional arrays:
 - `boundaries`
 - `keepouts`
 - `core_zones`
+- `functional_zones`
+
+## Independent Entity Fields
+
+Geometry-bearing entities should support:
+
+- `mark`
+- `status`
+- `supported_by`
+- `supports`
+- `load_path`
+- `downstream_impact`
+
+Allowed `status` values:
+
+- `confirmed`
+- `assumed`
+- `needs_review`
+- `transfer_required`
+
+Allowed `downstream_impact` values:
+
+- `DXF`
+- `Revit`
+- `ETABS`
+- `future_YJK`
+
+Use these fields to make each element independently reviewable. Narrative warnings are not enough for transfer or support-continuity checks.
 
 ## Analysis Seed Model
 
@@ -129,3 +157,11 @@ Use `references/neutral-structural-schema.json` as the validation schema for thi
 For deterministic project-side checking, use:
 - `scripts/check_neutral_model.py`
 - `scripts/neutral_model_to_review_dxf.py`
+
+Use the independent-field check when preparing a model for modular review:
+
+```bash
+python scripts/check_neutral_model.py <neutral_model.json> --check-independent-fields
+```
+
+Older review models may pass the base validator but warn under this option until `status`, `support_relation`, and `downstream_impact` have been backfilled.

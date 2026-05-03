@@ -7,14 +7,16 @@ Use this reference when the task is to explain, design, or implement the end-to-
 ## Core Pipeline
 
 ```text
-GBP / PDF / DXF / image
--> geometry extraction
--> neutral structural JSON
--> Revit review model
--> ETABS / YJK / SAFE analysis seeds
--> analysis results and failures
--> AI explanation and iteration
+GBP
+-> drawing intake
+-> grid/story/boundary/zoning
+-> neutral JSON
+-> review DXF
+-> Revit
+-> ETABS 21.1
 ```
+
+Keep this route concise. Detailed extraction and design control live inside each stage, not in the route name.
 
 ## Ownership Rules
 
@@ -22,21 +24,25 @@ GBP / PDF / DXF / image
 - `Intent Model` owns extracted structural geometry and topology.
 - `Analysis Seed Model` owns analysis inputs such as materials, sections, loads, combinations, and settings.
 - `Revit model` owns BIM coordination state and human review state.
-- `ETABS/YJK/SAFE` own formal structural analysis and design-check results.
+- `ETABS` owns the first-priority formal structural analysis and design-check results.
+- `YJK/SAFE` are future adapter branches.
 
 ## Design Principles
 
 - Neutral JSON is the source of truth.
 - Revit is the BIM and checking hub, not the calculation authority.
 - Formal code compliance comes from analysis software, not the LLM.
-- ETABS is the first-priority analysis route, YJK is the second, and SAFE follows as a slab or foundation branch.
+- ETABS 21.1 is the first-priority analysis route.
+- YJK is a future adapter and must not be described as the current main workflow.
+- SAFE follows later as a slab or foundation branch.
 - AI may infer and screen, but must preserve uncertainty and traceability.
 - Each layer should be replaceable without rewriting the whole stack.
-- V1 supports vector PDF and DXF inputs only.
+- V1 prioritizes vector PDF and DXF inputs. OCR/manual routes are fallback and must be flagged.
+- Each module must be independently runnable and must declare downstream impact.
 
 ## Layer Map
 
-### Layer 1: Geometry extraction
+### Layer 0: Project setup and source intake
 
 Input:
 - vector PDF
@@ -45,14 +51,32 @@ Input:
 - image sheets
 
 Output:
+- source inventory
+- sheet index
+- extraction route
+- source IDs for traceability
+- version/run manifest
+
+### Layer 1: Drawing interpretation
+
+Run in controlled blocks:
+- grid line extraction and validation
+- site/building/podium/tower boundary extraction
+- levels, storeys, and standard-floor grouping
+- functional zoning
+- openings, voids, edge conditions, and keepouts
+- architectural and brief constraints
+- traceability report
+
+Process each block element by element. Do not collapse weak recognitions into one hard model.
+
+Output:
 - grids
-- levels if available
+- levels and storey groups
 - envelope
 - cores
-- columns
-- walls
-- beams if architecturally shown
-- slabs / openings / ramps / keepouts
+- functional zones
+- openings / ramps / keepouts
 - uncertainty annotations
 
 ### Layer 2: Neutral structural model
@@ -61,8 +85,20 @@ Split into:
 - `Intent Model`
 - `Analysis Seed Model`
 
-This layer should be software-agnostic.
+This layer should be software-agnostic and element-owned.
 This V1 layer does not include reinforcement or detailed design results.
+
+Each relevant element should carry or link to:
+- stable ID / mark
+- source / traceability
+- level / storey
+- geometry
+- structural role
+- section seed
+- status
+- support relation
+- load path
+- downstream impact
 
 ### Layer 3: Revit intermediary
 
@@ -81,8 +117,8 @@ Rules:
 
 Use adapters to convert the neutral model into:
 - ETABS seeds
-- YJK seeds
-- SAFE seeds
+- future YJK seeds
+- future SAFE seeds
 
 ### Layer 5: Feedback loop
 
@@ -100,6 +136,32 @@ Feed them back into JSON, not only into software-local models.
 - `review-grade`: geometry plus prechecks, still no formal analysis
 - `analysis-seed-grade`: export-ready for solver input
 - `analysis-verified`: checked by ETABS, YJK, or SAFE
+
+## Controlled Change Rule
+
+Change one module at a time:
+
+1. identify the changed module
+2. identify upstream inputs
+3. identify downstream consumers
+4. run the module validator
+5. run affected downstream validators only
+
+Run the full pipeline only when the source drawing, coordinate basis, grid backbone, schema contract, or global support/load-path rule changes.
+
+## Iteration Triggers
+
+Re-open only the affected block when:
+
+- grid spacing or labels change
+- storey grouping changes
+- boundary or footprint changes
+- functional zoning or keepout changes
+- an upper support lacks lower support
+- a transfer member is not marked as transfer
+- a wall-supported slab line has a duplicate beam without reason
+- Revit review exposes a geometry or metadata mismatch
+- ETABS handoff lacks story, property, support, load, or opening data
 
 ## Minimum Deliverables By Phase
 

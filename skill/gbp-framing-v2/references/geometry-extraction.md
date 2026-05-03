@@ -6,13 +6,13 @@ Use this reference when extracting structural geometry from GBP drawings.
 
 ## V1 Input Boundary
 
-Support only:
+Prioritize:
 - vector PDF
 - DXF
 
-Do not support in V1:
+Fallback only, explicitly flagged:
 - scanned PDF
-- OCR-only workflows
+- OCR-assisted scanned PDF
 - raster image interpretation
 
 ## Mandatory Strategy: Grid First
@@ -20,20 +20,29 @@ Do not support in V1:
 Do not begin from the building outline alone.
 
 Use this order:
-1. detect gridlines
-2. detect grid bubbles and axis labels
-3. resolve grid spacing and global coordinate basis
-4. place other geometry relative to the grid
-5. mark uncertainty where snapping or inference was needed
+1. register source files and sheets
+2. detect gridlines
+3. detect grid bubbles and axis labels
+4. resolve grid spacing and global coordinate basis
+5. extract levels, storeys, and standard-floor grouping
+6. extract boundaries
+7. extract functional zones
+8. extract openings, voids, edge conditions, and keepouts
+9. place other geometry relative to the grid
+10. mark uncertainty where snapping or inference was needed
+
+Stop after the drawing-understanding blocks if the grid/story/boundary basis is unstable. Do not proceed to final framing or ETABS.
 
 ## Extraction Targets
 
 Extract at minimum:
 - gridlines and labels
 - grid spacing
-- level markers when visible
+- levels, storeys, and standard-floor grouping
 - building boundary
+- site/podium/tower footprints when available
 - core and service zones
+- functional zones such as mall, office, parking, refuge, plant room, passage, atrium, lobby, and service areas
 - walls and major openings
 - column locations or candidate column centers if shown
 - ramps, circulation-sensitive zones, and parking keepouts
@@ -51,6 +60,7 @@ Extract at minimum:
 ### Tier 2: Structural-driving geometry
 
 - boundary
+- functional zones
 - core
 - walls
 - columns
@@ -98,9 +108,12 @@ At minimum, produce:
 
 ```json
 {
+  "source_inventory": [],
   "grids": [],
   "levels": [],
-  "boundary": {},
+  "storey_groups": [],
+  "boundaries": [],
+  "functional_zones": [],
   "core_zones": [],
   "columns": [],
   "walls": [],
@@ -114,11 +127,24 @@ At minimum, produce:
 
 - grid labels are unique and ordered
 - grid spacing is numerically consistent
+- storey groups are explicit where floors are repeated
 - boundary is closed
+- functional zones do not silently overlap in conflicting ways
 - core is located relative to the grid
 - major members do not float without reference geometry
 - parking or circulation keepouts are separate from structural members
 - unresolved conflicts are listed in `uncertainty`
+
+## Block Outputs
+
+For complex GBP inputs, output these blocks separately before structural design:
+
+- `M02.01_grid_lines`
+- `M02.02_boundaries`
+- `M02.03_levels_storeys`
+- `M02.04_functional_zones`
+- `M02.05_openings_keepouts`
+- `M02.07_traceability`
 
 ## Escalation Triggers
 

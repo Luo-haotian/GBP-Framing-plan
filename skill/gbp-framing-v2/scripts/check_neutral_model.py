@@ -29,7 +29,7 @@ def collect_ids(model: dict) -> tuple[set[str], list[str]]:
 
     for key in ("grids", "levels", "columns", "beams", "walls", "slabs", "openings", "uncertainty"):
         add(intent.get(key, []), key)
-    for key in ("boundaries", "keepouts", "core_zones"):
+    for key in ("boundaries", "keepouts", "core_zones", "functional_zones"):
         add(intent.get(key, []), key)
     for key in ("materials", "sections", "loads", "load_combinations", "boundary_conditions", "analysis_options"):
         add(seed.get(key, []), key)
@@ -37,7 +37,52 @@ def collect_ids(model: dict) -> tuple[set[str], list[str]]:
     return seen, issues
 
 
-def validate_model(model: dict) -> list[str]:
+def validate_support_relation(item: dict, entity_ids: set[str], label: str, issues: list[str]) -> None:
+    relation = item.get("support_relation")
+    if not relation:
+        return
+    for key in ("supported_by", "supports", "load_path"):
+        for target_id in relation.get(key, []):
+            if target_id not in entity_ids:
+                issues.append(f"{label} support relation references missing entity: {item['id']} {key} -> {target_id}")
+
+
+def validate_independent_fields(model: dict) -> list[str]:
+    issues: list[str] = []
+    intent = model["intent_model"]
+
+    traceable_keys = (
+        "columns",
+        "beams",
+        "walls",
+        "slabs",
+        "openings",
+        "boundaries",
+        "keepouts",
+        "core_zones",
+        "functional_zones",
+    )
+    structural_keys = ("columns", "beams", "walls", "slabs", "core_zones")
+
+    for key in traceable_keys:
+        for item in intent.get(key, []):
+            item_id = item.get("id", f"<missing id in {key}>")
+            for field in ("status", "downstream_impact"):
+                if field not in item:
+                    issues.append(f"{key} independent field missing: {item_id} -> {field}")
+            if "traceability" not in item:
+                issues.append(f"{key} traceability missing: {item_id}")
+
+    for key in structural_keys:
+        for item in intent.get(key, []):
+            item_id = item.get("id", f"<missing id in {key}>")
+            if "support_relation" not in item:
+                issues.append(f"{key} support relation missing: {item_id}")
+
+    return issues
+
+
+def validate_model(model: dict, check_independent_fields: bool = False) -> list[str]:
     issues: list[str] = []
     required_root = [
         "metadata",
@@ -105,6 +150,26 @@ def validate_model(model: dict) -> list[str]:
         if opening["level_id"] not in levels:
             issues.append(f"opening level reference error: {opening['id']}")
 
+    for boundary in intent.get("boundaries", []):
+        if boundary["level_id"] not in levels:
+            issues.append(f"boundary level reference error: {boundary['id']}")
+
+    for keepout in intent.get("keepouts", []):
+        if keepout["level_id"] not in levels:
+            issues.append(f"keepout level reference error: {keepout['id']}")
+
+    for core_zone in intent.get("core_zones", []):
+        if core_zone["level_id"] not in levels:
+            issues.append(f"core zone level reference error: {core_zone['id']}")
+
+    for zone in intent.get("functional_zones", []):
+        if zone["level_id"] not in levels:
+            issues.append(f"functional zone level reference error: {zone['id']}")
+
+    for key in ("columns", "beams", "walls", "slabs", "core_zones"):
+        for item in intent.get(key, []):
+            validate_support_relation(item, entity_ids, key, issues)
+
     for item in intent.get("uncertainty", []):
         entity_id = item.get("entity_id", "")
         if entity_id and entity_id not in entity_ids:
@@ -132,6 +197,9 @@ def validate_model(model: dict) -> list[str]:
     if "issues" not in precheck or not isinstance(precheck["issues"], list):
         issues.append("precheck issues field must be a list")
 
+    if check_independent_fields:
+        issues.extend(validate_independent_fields(model))
+
     return issues
 
 
@@ -155,11 +223,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Validate GBP Framing V2 neutral structural model references and shape.")
     parser.add_argument("input_json", help="Path to neutral structural model JSON.")
     parser.add_argument("--report", help="Optional markdown report output path.")
+    parser.add_argument(
+        "--check-independent-fields",
+        action="store_true",
+        help="Also warn when review/control fields such as status, support_relation, and downstream_impact are missing.",
+    )
     args = parser.parse_args()
 
     model_path = Path(args.input_json).resolve()
     model = load_json(model_path)
-    issues = validate_model(model)
+    issues = validate_model(model, check_independent_fields=args.check_independent_fields)
     report = build_report(model_path, issues)
 
     if args.report:

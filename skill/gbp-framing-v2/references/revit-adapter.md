@@ -12,6 +12,7 @@ Revit is used for:
 - level and grid inspection
 - human checking of framing intent
 - downstream exchange control
+- review of JSON IDs, status, source, role, and section metadata
 
 Revit is not used as the authoritative structural calculation engine.
 Revit is not the source of truth.
@@ -23,6 +24,7 @@ The Revit adapter should consume the neutral structural model, not raw GBP direc
 Required mapped entities:
 - levels
 - grids
+- boundaries and functional zones when useful for review
 - columns
 - walls
 - framing members
@@ -37,6 +39,8 @@ Required mapped entities:
 - Keep level names stable and ordered.
 - Separate model elements from review-only annotations.
 - Record which entities were auto-created versus manually revised in Revit.
+- Preserve `status`, `supported_by`, `supports`, `load_path`, and `downstream_impact` as parameters or review metadata where practical.
+- Use Group, Link, or compact repeated-floor strategy for standard floors; do not blindly copy all repeated floors.
 
 ## Review Workflow
 
@@ -65,6 +69,10 @@ For each mapped object, store:
 - review status
 - source confidence
 - last sync direction
+- model status
+- structural role
+- section seed
+- source reference
 
 ## Sync Directions
 
