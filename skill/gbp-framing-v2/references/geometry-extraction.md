@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Use this reference when extracting structural geometry from GBP drawings.
+Use this reference during Stage 1 Architectural Recognition. This stage reads GBP drawings element by element and outputs architectural data plus a review DXF before structural design begins.
 
 ## V1 Input Boundary
 
@@ -28,10 +28,20 @@ Use this order:
 6. extract boundaries
 7. extract functional zones
 8. extract openings, voids, edge conditions, and keepouts
-9. place other geometry relative to the grid
+9. place other architectural geometry relative to the grid
 10. mark uncertainty where snapping or inference was needed
 
 Stop after the drawing-understanding blocks if the grid/story/boundary basis is unstable. Do not proceed to final framing or ETABS.
+
+## Stage 1 Required Outputs
+
+At the end of Stage 1, output:
+
+- `architectural_model.json`
+- `architectural_review.dxf`
+- `architectural_validation_report.md`
+
+The DXF is a review aid for checking recognition quality. It is not the structural framing DXF unless Stage 2 has already produced structural data.
 
 ## Extraction Targets
 
@@ -102,7 +112,7 @@ Always report the chosen basis.
 
 Use when PDF or DXF includes lines, text, or curves that can be parsed deterministically.
 
-## Output Shape
+## Architectural JSON Output Shape
 
 At minimum, produce:
 
@@ -115,13 +125,18 @@ At minimum, produce:
   "boundaries": [],
   "functional_zones": [],
   "core_zones": [],
-  "columns": [],
+  "existing_or_shown_columns": [],
   "walls": [],
   "openings": [],
   "keepouts": [],
+  "edge_conditions": [],
+  "architectural_constraints": [],
+  "traceability": [],
   "uncertainty": []
 }
 ```
+
+Do not use this output to imply structural design completion. Stage 1 owns architectural recognition only.
 
 ## QA Gates
 
@@ -135,16 +150,25 @@ At minimum, produce:
 - parking or circulation keepouts are separate from structural members
 - unresolved conflicts are listed in `uncertainty`
 
+After each small block, run a local cross-check:
+
+- compare the block with source sheets
+- compare against the already accepted grid/story/boundary/zoning data
+- record whether the block is complete, partial, conflict-based, or assumption-based
+- stop before Stage 2 when a missing architectural item would change structural intent
+
 ## Block Outputs
 
 For complex GBP inputs, output these blocks separately before structural design:
 
-- `M02.01_grid_lines`
-- `M02.02_boundaries`
-- `M02.03_levels_storeys`
-- `M02.04_functional_zones`
-- `M02.05_openings_keepouts`
-- `M02.07_traceability`
+- `A01_source_inventory`
+- `A02_grid_lines`
+- `A03_levels_storeys`
+- `A04_boundaries`
+- `A05_functional_zones`
+- `A06_cores_service_zones`
+- `A07_openings_voids_keepouts`
+- `A08_traceability_uncertainty`
 
 ## Escalation Triggers
 

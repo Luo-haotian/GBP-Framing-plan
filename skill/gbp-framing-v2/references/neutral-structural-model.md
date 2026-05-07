@@ -2,12 +2,13 @@
 
 ## Purpose
 
-Use this reference when defining or extending the JSON contract that sits between GBP interpretation, Revit, and analysis software.
+Use this reference when defining or extending the JSON contracts that sit between GBP architectural recognition, structural design, Revit, and analysis software.
 
 ## V1 Scope Boundary
 
-This V1 model includes only:
-- `Intent Model`
+This V1 model includes:
+- `Architectural Model`
+- `Structural Model`
 - `Analysis Seed Model`
 
 This V1 model excludes:
@@ -15,9 +16,30 @@ This V1 model excludes:
 - detailed design results
 - code-specific design outputs
 
-## Two-Part Model
+## Three-Part Product Data Model
 
-### 1. Intent Model
+### 1. Architectural Model
+
+Use for recognized architectural facts and constraints:
+- source inventory
+- grids
+- levels and storey groups
+- boundaries
+- functional zones
+- cores and service zones
+- walls, openings, voids, shafts, ramps, and atria
+- keepout and no-column zones
+- edge conditions
+- traceability
+- uncertainty
+
+Stage output:
+
+- `architectural_model.json`
+- `architectural_review.dxf`
+- `architectural_validation_report.md`
+
+### 2. Structural Model
 
 Use for extracted or inferred structural intent:
 - grids
@@ -27,8 +49,18 @@ Use for extracted or inferred structural intent:
 - candidate member types
 - keepouts
 - uncertainty
+- support relations
+- load paths
+- transfer-required conditions
+- preliminary section seeds
 
-### 2. Analysis Seed Model
+Stage output:
+
+- `structural_model.json`
+- `structural_review.dxf`
+- `structural_validation_report.md`
+
+### 3. Analysis Seed Model
 
 Use for solver-facing inputs:
 - materials
@@ -40,7 +72,11 @@ Use for solver-facing inputs:
 
 Do not collapse these layers unless the project is very small and the user explicitly wants a merged contract.
 
+Structural design must consume the architectural model. It must not silently reinterpret architectural facts or hide architectural assumptions.
+
 ## Required Root Shape
+
+Current legacy-compatible structural JSON root:
 
 ```json
 {
@@ -53,6 +89,28 @@ Do not collapse these layers unless the project is very small and the user expli
 }
 ```
 
+Recommended stage-separated product roots:
+
+```json
+{
+  "metadata": {},
+  "source_of_truth": "json",
+  "architectural_model": {},
+  "architectural_validation": {}
+}
+```
+
+```json
+{
+  "metadata": {},
+  "source_of_truth": "json",
+  "architectural_model_ref": {},
+  "structural_model": {},
+  "analysis_seed_model": {},
+  "structural_validation": {}
+}
+```
+
 ## Required Metadata
 
 - version
@@ -60,7 +118,29 @@ Do not collapse these layers unless the project is very small and the user expli
 - confidence
 - units
 
-## Required Intent Model Shape
+## Required Architectural Model Shape
+
+```json
+{
+  "source_inventory": [],
+  "grids": [],
+  "levels": [],
+  "storey_groups": [],
+  "boundaries": [],
+  "functional_zones": [],
+  "core_zones": [],
+  "walls": [],
+  "openings": [],
+  "voids": [],
+  "keepouts": [],
+  "edge_conditions": [],
+  "architectural_constraints": [],
+  "traceability": [],
+  "uncertainty": []
+}
+```
+
+## Required Structural Model Shape
 
 ```json
 {
@@ -73,6 +153,9 @@ Do not collapse these layers unless the project is very small and the user expli
   "walls": [],
   "slabs": [],
   "openings": [],
+  "support_relations": [],
+  "load_paths": [],
+  "transfer_required": [],
   "uncertainty": []
 }
 ```

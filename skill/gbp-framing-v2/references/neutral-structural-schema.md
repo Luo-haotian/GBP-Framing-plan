@@ -2,11 +2,12 @@
 
 ## Purpose
 
-Use this reference when the task needs the concrete V1 schema structure for the neutral structural model.
+Use this reference when the task needs the concrete V1 schema structure for the current structural model, plus the stage-separated JSON direction.
 
 ## V1 Design Decisions
 
-- Include only `Intent Model` and `Analysis Seed Model`.
+- Keep the current validator backward-compatible with `Intent Model` and `Analysis Seed Model`.
+- Move product architecture toward separate `architectural_model.json` and `structural_model.json`.
 - Exclude reinforcement and detailed design results.
 - Keep the contract code-neutral.
 - Keep `source_of_truth` fixed as `json`.
@@ -15,6 +16,8 @@ Use this reference when the task needs the concrete V1 schema structure for the 
 
 ## Root Contract
 
+Current validator root object:
+
 The root object should contain:
 - `metadata`
 - `source_of_truth`
@@ -22,6 +25,13 @@ The root object should contain:
 - `intent_model`
 - `analysis_seed_model`
 - `precheck`
+
+Stage-separated target contracts:
+
+- `architectural_model.json` contains source inventory, grids, levels, storey groups, boundaries, functional zones, cores, openings, voids, keepouts, edge conditions, traceability, and uncertainty.
+- `structural_model.json` references architectural JSON and contains structural intent, support/load-path relations, transfer flags, preliminary section seeds, and analysis seed data.
+
+The current neutral schema can remain as a compatibility bridge while implementation is split into Stage 1 and Stage 2 outputs.
 
 ## Required Metadata Fields
 

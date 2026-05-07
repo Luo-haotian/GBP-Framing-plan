@@ -1,6 +1,6 @@
 ---
 name: gbp-framing-v2
-description: Interpret Hong Kong GBP architectural drawing packages into a modular, traceable structural pipeline with grid-first drawing understanding, independent element contracts, neutral structural JSON as source of truth, review DXF, Revit review/coordination import, ETABS 21.1 handoff first, and YJK/SAFE as future adapters. Use when Codex needs to extract grid lines, levels/storeys, boundaries, functional zones, cores, openings, keepouts, structural framing intent, support/load-path relations, transfer-required conditions, Revit review metadata, ETABS adapter requirements, or module-level QA from GBP/PDF/DXF sources.
+description: "Interpret Hong Kong GBP architectural drawing packages through a three-stage controlled pipeline: Stage 1 Architectural Recognition outputs architectural JSON and architectural review DXF; Stage 2 Structural Design outputs structural JSON and structural review DXF; Stage 3 Model Conversion sends JSON data to Revit review/coordination and ETABS 21.1 first. Use when Codex needs grid/story/boundary/zoning extraction, traceable architectural elements, independent structural element records, support/load-path relations, transfer-required flags, Revit metadata, ETABS adapter requirements, or module-level QA from GBP/PDF/DXF sources."
 ---
 
 # GBP Framing V2
@@ -9,9 +9,9 @@ Use this skill as a controlled engineering pipeline, not as a one-shot drawing c
 
 Current main route. Keep this route concise and stable:
 
-`GBP -> drawing intake -> grid/story/boundary/zoning -> neutral JSON -> review DXF -> Revit -> ETABS 21.1`
+`GBP -> Architectural JSON + Architectural Review DXF -> Structural JSON + Structural Review DXF -> Model Conversion`
 
-The route stays simple. The internal work inside `drawing intake`, `grid/story/boundary/zoning`, and `neutral JSON` can be detailed and element-by-element.
+Stage 3 Model Conversion prioritizes Revit review/coordination and ETABS 21.1. The route stays simple. The internal work inside each stage can be detailed and element-by-element.
 
 YJK is a future adapter. Do not present YJK as the current main workflow.
 
@@ -24,24 +24,29 @@ Identify the task first. Load only the references needed for that route.
    - Read `references/output-contract.md`.
    - Use when the user asks for product flow, module boundaries, controlled reruns, MVP scope, or version strategy.
 
-2. **Drawing intake and GBP understanding**
+2. **Stage 1: Architectural Recognition**
    - Read `references/geometry-extraction.md`.
    - Read `references/hk-code-basis.md` only when code-derived constraints or Hong Kong basis must be stated.
-   - Use when the next task is identifying grid lines, storeys, boundaries, zoning, cores, openings, keepouts, and traceability from a GBP/PDF/DXF package.
+   - Use when the next task is identifying source sheets, grid lines, storeys, boundaries, zoning, cores, openings, keepouts, and traceability from a GBP/PDF/DXF package.
+   - Output `architectural_model.json`, `architectural_review.dxf`, and `architectural_validation_report.md` or equivalent block outputs before structural design.
 
-3. **Neutral structural model / schema**
+3. **Stage 2: Structural Design / structural JSON**
    - Read `references/neutral-structural-model.md`.
    - Read `references/neutral-structural-schema.md` for concrete field requirements.
+   - Read `references/precheck-engine.md` for support, transfer, and load-path validation.
    - Run `scripts/check_neutral_model.py` when a JSON instance must be validated.
+   - Output `structural_model.json`, `structural_review.dxf`, and `structural_validation_report.md` or equivalent block outputs.
 
 4. **Structural design logic and prechecks**
    - Read `references/precheck-engine.md`.
    - Read `references/neutral-structural-model.md` for entity ownership and support relations.
    - Use when identifying support continuity, transfer-required conditions, wall-supported slabs, long-span assumptions, or review-grade sizing.
 
-5. **Review deliverables: DXF and Revit**
+5. **Stage 3: Model Conversion**
    - Read `references/revit-adapter.md`.
+   - Read `references/analysis-adapters.md`.
    - Run `scripts/neutral_model_to_review_dxf.py` when generating a review DXF from JSON.
+   - Use Revit for review/coordination and ETABS 21.1 as the first analysis conversion target.
 
 6. **Analysis adapter route**
    - Read `references/analysis-adapters.md`.
@@ -54,7 +59,9 @@ Identify the task first. Load only the references needed for that route.
 
 ## Always-Loaded Stance
 
-- Treat neutral structural JSON as the source of truth.
+- Treat JSON as the source of truth at each stage:
+  - `architectural_model.json` owns recognized architectural facts and constraints.
+  - `structural_model.json` owns structural intent and analysis seed data.
 - Treat Revit as review, coordination, and import checking, not as calculation authority.
 - Treat ETABS 21.1 as the first-priority formal analysis route.
 - Keep YJK as future adapter.
@@ -67,13 +74,79 @@ Identify the task first. Load only the references needed for that route.
 
 ## Modular Execution Order
 
-Use the smallest route that satisfies the task. For a complex new GBP, begin with M01/M02 only and do not jump to framing or ETABS until the drawing backbone is stable.
+Use the smallest stage that satisfies the task. For a complex new GBP, begin with Stage 1 only and do not jump to framing, Revit, or ETABS until the architectural backbone is stable.
+
+## Three-Stage Control
+
+### Stage 1: Architectural Recognition
+
+Goal: read the GBP package element by element and output architectural data plus a DXF that can be visually checked.
+
+Controlled blocks:
+
+1. source intake and sheet index
+2. grid line extraction and validation
+3. level, storey, and standard-floor grouping
+4. site, building, podium, and tower boundaries
+5. functional zoning
+6. cores and service zones
+7. openings, voids, shafts, ramps, atria, and edge conditions
+8. keepout and no-column zones
+9. traceability and uncertainty
+
+Validation after every block:
+
+- compare against source sheets
+- cross-check with grid, level, boundary, and zoning data already extracted
+- record missing data, conflicts, and assumptions before continuing
+
+### Stage 2: Structural Design
+
+Goal: consume architectural JSON and create structural JSON element by element.
+
+Controlled blocks:
+
+1. structural grid and support philosophy
+2. vertical supports: columns, walls, cores
+3. transfer-required conditions
+4. slabs and floor-system zones
+5. beams by role: primary, secondary, transfer, collector, opening-edge
+6. wall-supported slab checks
+7. lateral system intent
+8. preliminary section seeds and calculation basis
+9. load-path graph
+10. ETABS handoff requirements
+
+Validation after every block:
+
+- check completeness against architectural JSON
+- check whether the structural proposal respects architectural intent
+- flag missing calculation basis, unsupported elements, and transfer requirements
+- keep final design claims blocked until formal analysis exists
+
+### Stage 3: Model Conversion
+
+Goal: convert approved JSON data into downstream models without changing source-of-truth ownership.
+
+Current priority:
+
+1. Revit review/coordination conversion
+2. ETABS 21.1 model/API conversion
+
+Validation after every adapter step:
+
+- check JSON readability and required fields
+- check target model feasibility
+- preserve element IDs and review metadata
+- report unsupported features and assumptions
+
+Future adapters, including YJK and SAFE, must stay outside the current main route unless explicitly requested.
 
 ## Element-By-Element Governance
 
 Use pile-foundation-style governance: keep the top-level route short, then control the detailed work inside each stage.
 
-### Drawing Understanding Sequence
+### Stage 1 Drawing Recognition Sequence
 
 For each drawing package, identify elements one by one:
 
@@ -90,7 +163,7 @@ For each drawing package, identify elements one by one:
 
 Do not merge weak recognitions into a single hard model. Each recognized element needs its own source, confidence, status, and downstream impact.
 
-### Structural Arrangement Sequence
+### Stage 2 Structural Arrangement Sequence
 
 Arrange structural intent element by element:
 
@@ -158,9 +231,24 @@ For the next complex GBP, prioritize:
 - functional zones such as mall, office, parking, refuge, passage, and plant room,
 - source traceability and uncertainty.
 
-### M03 Neutral Structural JSON
+### M03 JSON Source-Of-Truth Contracts
 
-Write drawing facts, assumptions, and structural intent into a stable JSON contract. Each element must be independently identifiable and reviewable, but keep the overall route concise.
+Write drawing facts, assumptions, structural intent, and analysis seed data into stable JSON contracts. Each element must be independently identifiable and reviewable, but keep the overall route concise.
+
+Stage 1 owns:
+
+- `architectural_model.json`
+- recognized architectural facts
+- architectural assumptions and uncertainty
+- architectural review DXF data
+
+Stage 2 owns:
+
+- `structural_model.json`
+- structural intent
+- support/load-path relations
+- analysis seed data
+- structural review DXF data
 
 Every relevant entity should carry or link to:
 
@@ -209,9 +297,9 @@ Do not duplicate beams along wall support lines unless there is a collector, tra
 
 ### M05 Review Deliverables
 
-Generate review DXF and Revit import outputs from JSON only. Preserve JSON IDs and review metadata. Use compact repeated-floor strategy for standard floors; avoid blindly copying every repeated floor.
+Generate architectural review DXF, structural review DXF, and Revit import outputs from JSON only. Preserve JSON IDs and review metadata. Use compact repeated-floor strategy for standard floors; avoid blindly copying every repeated floor.
 
-### M06 ETABS 21.1 Handoff
+### M06 Stage 3 Model Conversion / ETABS 21.1 Handoff
 
 Generate ETABS command plans or API models from JSON. Required handoff data includes stories, frame/shell objects, materials, sections, supports, loads, combinations, and unsupported-feature warnings.
 

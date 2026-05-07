@@ -2,13 +2,28 @@
 
 ## Purpose
 
-Use this reference when screening a model before formal solver export.
+Use this reference when screening architectural recognition, structural design, or model conversion outputs before promotion to the next stage.
 
 ## Scope
 
 Prechecks are quick engineering filters. They are not formal code compliance.
 
+Every small block should be checked immediately after it is produced. Do not wait until the whole pipeline is complete to discover that a grid, storey, boundary, zoning, support, or adapter assumption is broken.
+
 ## Rule Categories
+
+### Architectural recognition completeness
+
+- missing source sheet reference
+- unresolved grid label or spacing
+- unresolved storey grouping
+- incomplete boundary
+- unresolved functional zoning
+- missing core or service-zone relation
+- unclosed opening or void
+- keepout/no-column-zone ambiguity
+- missing traceability
+- drawing conflict not recorded as uncertainty
 
 ### Geometry integrity
 
@@ -46,6 +61,16 @@ Prechecks are quick engineering filters. They are not formal code compliance.
 - missing entity status
 - missing downstream impact
 
+### Model conversion readiness
+
+- architectural JSON cannot be read by converter
+- structural JSON cannot be read by converter
+- missing element IDs for Revit or ETABS
+- missing story data
+- missing Revit metadata mapping
+- missing ETABS frame/shell property data
+- unsupported adapter feature not reported
+
 ## Severity Levels
 
 - `info`: worth noting, not blocking
@@ -54,13 +79,11 @@ Prechecks are quick engineering filters. They are not formal code compliance.
 
 ## Module-Level Checks
 
-Run checks by affected module:
+Run checks by affected stage and module:
 
-- M01/M02: source inventory, grid, boundary, storey, zoning, opening, keepout, traceability
-- M03: schema, required entity fields, unit consistency, source-of-truth ownership
-- M04: support continuity, transfer-required detection, wall-supported slab rule, preliminary sizing
-- M05: DXF readability, Revit metadata, repeated-floor review strategy
-- M06: ETABS story/property/load/readiness checks
+- Stage 1 / A01-A08: source inventory, grid, boundary, storey, zoning, core, opening, keepout, traceability, architectural review DXF
+- Stage 2 / S01-S09: schema, required entity fields, unit consistency, support continuity, transfer-required detection, wall-supported slab rule, preliminary sizing, load path
+- Stage 3 / C01-C03: Revit metadata, repeated-floor review strategy, ETABS story/property/load/readiness checks, unsupported feature reporting
 
 Do not rerun unrelated modules unless the changed block affects them.
 
@@ -84,6 +107,7 @@ Do not rerun unrelated modules unless the changed block affects them.
 Always state:
 - what was screened
 - what was not screened
+- which stage was screened
 - which issues block analysis-seed release
 - which modules were touched
 - which downstream validators were run

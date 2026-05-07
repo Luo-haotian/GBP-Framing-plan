@@ -2,34 +2,39 @@
 
 ## Purpose
 
-Use this reference when the task is to explain, design, or implement the end-to-end `GBP -> JSON -> Revit -> analysis` pipeline.
+Use this reference when the task is to explain, design, or implement the end-to-end GBP product pipeline.
 
 ## Core Pipeline
 
 ```text
 GBP
--> drawing intake
--> grid/story/boundary/zoning
--> neutral JSON
--> review DXF
--> Revit
--> ETABS 21.1
+-> Architectural JSON + Architectural Review DXF
+-> Structural JSON + Structural Review DXF
+-> Model Conversion
 ```
 
-Keep this route concise. Detailed extraction and design control live inside each stage, not in the route name.
+Keep this route concise. Detailed extraction, design control, and validation live inside each stage, not in the route name.
+
+Stage 3 Model Conversion prioritizes:
+
+1. Revit review/coordination conversion
+2. ETABS 21.1 model/API conversion
+
+YJK and SAFE are future adapters.
 
 ## Ownership Rules
 
 - `GBP source` owns raw architectural intent and visible dimensions.
-- `Intent Model` owns extracted structural geometry and topology.
-- `Analysis Seed Model` owns analysis inputs such as materials, sections, loads, combinations, and settings.
+- `Architectural JSON` owns recognized architectural facts, constraints, traceability, and uncertainty.
+- `Structural JSON` owns structural intent, support/load-path relations, preliminary sizing seeds, and analysis seed data.
 - `Revit model` owns BIM coordination state and human review state.
 - `ETABS` owns the first-priority formal structural analysis and design-check results.
 - `YJK/SAFE` are future adapter branches.
 
 ## Design Principles
 
-- Neutral JSON is the source of truth.
+- JSON is the source of truth.
+- Architectural recognition and structural design are separate data stages.
 - Revit is the BIM and checking hub, not the calculation authority.
 - Formal code compliance comes from analysis software, not the LLM.
 - ETABS 21.1 is the first-priority analysis route.
@@ -40,9 +45,9 @@ Keep this route concise. Detailed extraction and design control live inside each
 - V1 prioritizes vector PDF and DXF inputs. OCR/manual routes are fallback and must be flagged.
 - Each module must be independently runnable and must declare downstream impact.
 
-## Layer Map
+## Stage Map
 
-### Layer 0: Project setup and source intake
+### M00: Project setup and source intake
 
 Input:
 - vector PDF
@@ -57,36 +62,69 @@ Output:
 - source IDs for traceability
 - version/run manifest
 
-### Layer 1: Drawing interpretation
+### Stage 1: Architectural Recognition
 
 Run in controlled blocks:
-- grid line extraction and validation
-- site/building/podium/tower boundary extraction
-- levels, storeys, and standard-floor grouping
-- functional zoning
-- openings, voids, edge conditions, and keepouts
-- architectural and brief constraints
-- traceability report
+1. source inventory and sheet index
+2. grid line extraction and validation
+3. levels, storeys, and standard-floor grouping
+4. site/building/podium/tower boundary extraction
+5. functional zoning
+6. cores and service zones
+7. openings, voids, shafts, ramps, atria, edge conditions, and keepouts
+8. architectural and brief constraints
+9. traceability and uncertainty report
 
 Process each block element by element. Do not collapse weak recognitions into one hard model.
 
 Output:
-- grids
-- levels and storey groups
-- envelope
-- cores
-- functional zones
-- openings / ramps / keepouts
-- uncertainty annotations
+- `architectural_model.json`
+- `architectural_review.dxf`
+- `architectural_validation_report.md`
+- block-level source maps and uncertainty annotations
 
-### Layer 2: Neutral structural model
+Validation after every block:
+
+- compare new data with source sheets
+- cross-check grid, story, boundary, zoning, opening, and keepout consistency
+- mark missing data, conflicts, and assumptions before continuing
+
+### Stage 2: Structural Design
 
 Split into:
-- `Intent Model`
-- `Analysis Seed Model`
+- structural intent
+- analysis seed data
 
-This layer should be software-agnostic and element-owned.
-This V1 layer does not include reinforcement or detailed design results.
+This stage consumes `architectural_model.json`. It must not silently reinterpret architectural facts.
+
+Run in controlled blocks:
+
+1. structural grid and support philosophy
+2. vertical support system: columns, walls, cores
+3. transfer strategy
+4. floor system: slabs, beams, long-span zones
+5. wall-supported slab checks
+6. lateral system intent
+7. preliminary sizing and calculation basis
+8. load path continuity
+9. ETABS handoff requirements
+
+Output:
+
+- `structural_model.json`
+- `structural_review.dxf`
+- `structural_validation_report.md`
+- analysis seed readiness report
+
+Validation after every block:
+
+- architectural completeness check
+- architectural intent compliance check
+- support continuity and transfer check
+- calculation-basis check
+- downstream feasibility check
+
+This stage does not include reinforcement, final design results, or construction documents.
 
 Each relevant element should carry or link to:
 - stable ID / mark
@@ -100,7 +138,31 @@ Each relevant element should carry or link to:
 - load path
 - downstream impact
 
-### Layer 3: Revit intermediary
+### Stage 3: Model Conversion
+
+Convert approved JSON data into target models without changing source-of-truth ownership.
+
+Input:
+
+- `architectural_model.json`
+- `structural_model.json`
+- validation reports
+
+Output:
+
+- Revit review/coordination package
+- ETABS 21.1 model/API command plan
+- conversion validation reports
+
+Validation after every adapter step:
+
+- JSON readability and required-field completeness
+- target model feasibility
+- element ID and metadata preservation
+- unsupported feature report
+- assumptions and conversion limitations
+
+### Revit intermediary
 
 Use Revit to:
 - visualize extracted framing
@@ -113,14 +175,14 @@ Rules:
 - `Revit -> JSON` is allowed only for approved review changes.
 - `source_of_truth` remains `json`.
 
-### Layer 4: Analysis adapters
+### Analysis adapters
 
 Use adapters to convert the neutral model into:
 - ETABS seeds
 - future YJK seeds
 - future SAFE seeds
 
-### Layer 5: Feedback loop
+### Feedback loop
 
 Capture:
 - failed members

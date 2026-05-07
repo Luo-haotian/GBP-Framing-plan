@@ -2,17 +2,24 @@
 
 ## Purpose
 
-Use this reference when designing or discussing ETABS, YJK, or SAFE handoff.
+Use this reference during Stage 3 Model Conversion when designing or discussing ETABS, YJK, or SAFE handoff.
 
 ## Shared Adapter Contract
 
 Each adapter should declare:
 - consumed JSON version
+- consumed stage artifacts
 - required entities
 - required analysis metadata
 - unsupported features
 - fallback assumptions
 - export status
+
+Current priority:
+
+1. ETABS 21.1
+2. future YJK after the ETABS-first contract is stable
+3. future SAFE or slab/foundation branch after the frame route is stable
 
 ## ETABS Adapter
 
@@ -24,6 +31,17 @@ Use for:
 
 Priority:
 - first-priority analysis route for the platform
+
+Primary inputs:
+
+- `architectural_model.json` for stories, grids, boundaries, openings, and architectural constraints
+- `structural_model.json` for frame/shell objects, supports, materials, sections, loads, load paths, and transfer flags
+
+Outputs:
+
+- ETABS import plan
+- ETABS API command plan or model
+- ETABS conversion validation report
 
 Minimum requirements:
 - levels / story data
@@ -77,7 +95,7 @@ Do not claim `auto-analysis-ready` unless all required metadata is present.
 
 ## Adapter Ownership Rule
 
-Adapters consume neutral JSON. They must not become the source of truth. Target-software object IDs belong in adapter metadata or result payloads, not as primary JSON identities.
+Adapters consume JSON. They must not become the source of truth. Target-software object IDs belong in adapter metadata or result payloads, not as primary JSON identities.
 
 ## Result Feedback Contract
 

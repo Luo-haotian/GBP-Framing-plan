@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Use this reference when Revit is the checking model, BIM intermediary, or exchange stop.
+Use this reference during Stage 3 Model Conversion when Revit is the checking model, BIM intermediary, or exchange stop.
 
 ## Role Of Revit
 
@@ -19,7 +19,12 @@ Revit is not the source of truth.
 
 ## Input Expectations
 
-The Revit adapter should consume the neutral structural model, not raw GBP directly.
+The Revit adapter should consume JSON, not raw GBP directly.
+
+Preferred inputs:
+
+- `architectural_model.json` for grids, levels, boundaries, zones, openings, and review context
+- `structural_model.json` for columns, walls, beams, slabs, support roles, status, and section seeds
 
 Required mapped entities:
 - levels
@@ -31,10 +36,16 @@ Required mapped entities:
 - slabs
 - openings
 
+Required conversion outputs:
+
+- Revit review/coordination model or import package
+- Revit mapping report
+- Revit validation report
+
 ## Mapping Rules
 
 - Keep `source_of_truth` as `json`.
-- Preserve neutral IDs in Revit parameters whenever possible.
+- Preserve JSON IDs in Revit parameters whenever possible.
 - Keep grid names exactly consistent with the neutral model.
 - Keep level names stable and ordered.
 - Separate model elements from review-only annotations.
@@ -44,7 +55,7 @@ Required mapped entities:
 
 ## Review Workflow
 
-1. import the neutral model
+1. import the approved JSON data
 2. visualize framing against grids and levels
 3. review obvious geometry issues
 4. mark review comments or overrides
